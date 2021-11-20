@@ -3,7 +3,7 @@ const vonage = require('@vonage/server-sdk')
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 const sendOtp = async (from, to, text) => {
-    const vonage = new Vonage({
+    const vonage = new vonage({
         apiKey: process.env.VonageAPIKEY,
         apiSecret: process.env.VonageAPISECRET
     })

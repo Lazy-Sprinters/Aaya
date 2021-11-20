@@ -18,7 +18,7 @@ router.post('/', async (req, res)=>{
       const clientResponse = utils.removeExtraKeysFromResponse(associatedClient);
       res.send(utils.responseUtil(400, err.message, null));
     }
-    else if (role == "service_provider"){
+    else if (role == "serviceProvider"){
       const associatedServiceProvider = serviceProvider.findByCredentials(req.body.phoneNumber, req.body.password);
       associatedServiceProvider.token = associatedServiceProvider.generateToken();
       const clientResponse = utils.removeExtraKeysFromResponse(associatedServiceProvider);

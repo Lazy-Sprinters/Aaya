@@ -74,8 +74,7 @@ const clientSchema = new mongoose.Schema({
     required: true,
   },
   token: {
-    type: String,
-    required: true,
+    type: String
   },
   blocked: {
     type: Boolean,
