@@ -7,15 +7,18 @@ const serviceProviderSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    trim: true
   },
   dob: {
     type: String,
     required: true,
+    trim: true
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true
   },
   phoneNumberVerified: {
     type: Boolean,
@@ -24,7 +27,14 @@ const serviceProviderSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate(value){
+      if (!validator.isEmail(value)){
+          throw new Error('Email is invalid');
+      }
+    }
   },
   emailVerified: {
     type: Boolean,
@@ -37,17 +47,21 @@ const serviceProviderSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
+    trim: true
   },
   pinCode: {
-    type: Number,
+    type: String,
     required: true,
+    trim: true
   },
   policePhone: {
-    type: Number,
+    type: String,
+    trim: true,
     required: true,
   },
   emergencyPhone: {
-    type: Number,
+    type: String,
+    trim: true,
     required: true,
   },
   serviceType: {

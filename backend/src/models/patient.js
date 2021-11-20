@@ -4,14 +4,17 @@ const patientSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    trim: true
   },
   dob: {
     type: Date,
     required: true,
+    trim: true
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true,
+    trim: true
   },
   phoneNumberVerified: {
     type: Boolean,
@@ -20,18 +23,22 @@ const patientSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
+    trim: true
   },
   pinCode: {
     type: String,
     required: true,
+    trim: true
   },
   policePhone: {
-    type: Number,
+    type: String,
     required: true,
+    trim: true
   },
   emergencyPhone: {
-    type: Number,
+    type: String,
     required: true,
+    trim: true
   },
   aadharURL: {
     type: String,
@@ -44,10 +51,12 @@ const patientSchema = new mongoose.Schema({
   patientDescription: {
     type: String,
     required: true,
+    trim: true
   },
   patientNotes: {
     type: String,
     required: true,
+    trim: true
   },
   clientId:{
     type: mongoose.Schema.Types.ObjectId,
