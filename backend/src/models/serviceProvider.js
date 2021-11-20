@@ -85,7 +85,6 @@ const serviceProviderSchema = new mongoose.Schema({
   },
   token: {
     type: String,
-    required: true
   },
   blocked: {
     type: Boolean,

@@ -16,11 +16,14 @@ app.use(cors());
 app.use(morgan("dev"));
 
 //Router Setups
-const LibraryRouter = require('./routers/library');
+const libraryRouter = require('./routers/library');
+const loginRouter = require('./routers/login');
 
 
 //assigning paths
-app.use('/library/upload', LibraryRouter);
+app.use('/library/upload', libraryRouter);
+app.use('/login', loginRouter);
+
 
 app.get("/", async (req, res) => {
   res.send('Server is up and running')
