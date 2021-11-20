@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const nodemailer = require("nodemailer");
+
 
 
 require("./db_config/mongo");
@@ -16,7 +16,7 @@ app.use(cors());
 app.use(morgan("dev"));
 
 app.get("/", async (req, res) => {
-  res.send("Server is up and running");
+  res.send('Server is up and running')
 });
 
 app.listen(port, () => {
