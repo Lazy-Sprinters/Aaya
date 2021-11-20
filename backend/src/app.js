@@ -23,7 +23,7 @@ const LibraryRouter = require('./routers/library');
 app.use('/library/upload', LibraryRouter);
 
 app.get("/", async (req, res) => {
-  res.send("Server is up and running");
+  res.send('Server is up and running')
 });
 
 app.listen(port, () => {
