@@ -1,19 +1,24 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.email",
+require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
+
+const sendEmail = async (ReceiverEmail, mailSubject, mailBody) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: "r20324pavitra@dpsrkp.net", 
-      pass: "PASSWORD", 
+      user: process.env.SenderEmail,
+      pass: process.env.SenderEmailPassword,
     },
   });
-  
 
-await transporter.sendMail({
-    from: 'r20324pavitra@dpsrkp.net',
-    to: 'samarthya3011@gmail.com',
-    subject: 'Test Email Subject',
-    text: 'Example Plain Text Message Body'
-});
+  await transporter.sendMail({
+    from: "Aaya Developed By Lazy Sprinters",
+    to: ReceiverEmail,
+    subject: mailSubject,
+    text: mailBody,
+  });
+};
+
+module.exports = {sendEmail};
