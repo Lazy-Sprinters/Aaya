@@ -69,7 +69,6 @@ const clientSchema = new mongoose.Schema({
   },
   blocked: {
     type: Boolean,
-    required: true,
     default: false
   }
 });

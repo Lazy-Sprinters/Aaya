@@ -5,3 +5,11 @@ exports.responseUtil = (statusCode, message, data) => {
     data: data,
   };
 };
+
+exports.removeExtraKeysFromResponse = (data) => {
+  delete data.password;
+  delete data.phoneNumberVerified;
+  delete data.emailVerified;
+  delete data.blocked;
+  return data;
+}
