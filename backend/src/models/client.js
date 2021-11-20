@@ -14,13 +14,18 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
-
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    trim: true
+    trim: true,
+    lowercase: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error('Email is invalid');
+      }
+    }
   },
   emailVerified: {
     type: Boolean,
@@ -31,29 +36,34 @@ const clientSchema = new mongoose.Schema({
     required: true,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true
   },
   phoneNumberVerified: {
     type: Boolean,
     required: true,
   },
   policePhone: {
-    type: Number,
+    type: String,
     required: true,
+    trim: true
   },
   emergencyPhone: {
-    type: Number,
+    type: String,
     required: true,
+    trim: true
   },
   address: {
     type: String,
     required: true,
+    trim: true
   },
   pinCode: {
     type: String,
     required: true,
+    trim: true
   },
   aadhaarURL: {
     type: String,
