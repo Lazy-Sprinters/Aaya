@@ -121,4 +121,16 @@ exports.filterServiceProvider = (serviceProviders) =>{
   return filteredList;
 }
 
+exports.viewServiceProvider = async (serviceProviderId) => {
+  let associatedServiceProvider = await ServiceProvider.findOne({'_id':mongoose.Types.ObjectId(serviceProviderId)})
+  associatedServiceProvider.password = "";
+  return associatedServiceProvider;
+}
+
+exports.viewClient = async (clientId) => {
+  let associatedClient = await Client.findOne({'_id': mongoose.Types.ObjectId(clientId)})
+  associatedClient.password = "";
+  return associatedClient;
+}
+
 module.exports = {parseDate}

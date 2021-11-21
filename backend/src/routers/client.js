@@ -106,4 +106,13 @@ router.post('/notifyServiceProvider', async(req, res)=>{
   }
 })
 
+router.post('/viewServiceProviderDetails', async(req,res) => {
+  try {
+    const associatedServiceProvider = await helper.viewServiceProvider(req.body.serviceProviderId);
+    res.send(utils.responseUtil(200, "Service Provider Found", {serviceProviderDetails: associatedServiceProvider}))
+  } catch (err) {
+    res.send(utils.responseUtil(400,err.message,null))
+  }
+})
+
 module.exports = router
