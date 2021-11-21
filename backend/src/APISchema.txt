@@ -1,0 +1,51 @@
+/// signup as Client
+
+Client {
+    name,
+    dob,
+    email,
+    password,
+    phoneNumber,
+    phoneNumberVerified,
+    address,
+    pinCode,
+    aadhaarURL,
+    displayPictureURL,
+    emergencyPhone,
+    policePhone,
+}
+
+//signup as ServiceProvider
+
+ServiceProvider {
+    name,
+    dob,
+    email,
+    phoneNumber,
+    phoneNumberVerified,
+    password,
+    address,
+    pinCode,
+    policePhone,
+    emergencyPhone,
+    serviceType (array),
+    aadhaarURL,
+    certificateURL,
+    displayPictureURL,
+    hourlyFees
+}
+
+//login 
+
+Login Request {
+    phoneNumber,
+    password,
+    role - "client, serviceProvider"
+}
+
+
+///pdf upload
+
+req {
+    file: file
+}
