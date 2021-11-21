@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 
 const router = new express.Router();
 
-router.post('/', async (req, res)=>{
+router.post('/in', async (req, res)=>{
   try{
     if (!req.body.role || !req.body.phoneNumber || !req.body.password){
       throw new Error("Data not present");
@@ -46,5 +46,28 @@ router.post('/', async (req, res)=>{
     res.send(utils.responseUtil(400, err.message, null));
   }
 });
+
+
+router.post('/out', async (req, res) => {
+  try {
+    const role = req.body.role
+    if(role == 'client') {
+      let associatedClient = await client.findOne({'_id': mongoose.Types.ObjectId(req.body.clientId)})
+      associatedClient.token = ""
+      res.send(utils.responseUtil(200, "Client Logged out", null))
+    } else if (role == 'serviceProvider') {
+      let associatedServiceProvider = await serviceProvider.findOne({'_id': mongoose.Types.ObjectId(req.body.serviceProviderId)})
+      associatedServiceProvider.token = ""
+      res.send(utils.responseUtil(200, "Service Provider Logged out", null))
+    } else if (role == 'admin') {
+      let associatedAdmin = await Admin.findOne({'_id': mongoose.Types.ObjectId(req.body.adminId)})
+      associatedAdmin.token = ""
+      res.send(utils.responseUtil(200, "Admin Logged out", null))
+    }
+  } catch (err) {
+    res.send(util.responseUtil(400, err.message, null))
+  }
+})
+
 
 module.exports = router

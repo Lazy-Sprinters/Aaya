@@ -25,7 +25,7 @@ const otpRouter = require('./routers/otp');
 
 //assigning paths
 app.use('/library/upload', libraryRouter);
-app.use('/login', loginRouter);
+app.use('/log', loginRouter);
 app.use('/client', clientRouter)
 app.use('/serviceProvider', serviceProviderRouter);
 app.use('/admin', adminRouter);
