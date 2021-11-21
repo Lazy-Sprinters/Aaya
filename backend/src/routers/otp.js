@@ -23,6 +23,7 @@ router.post('/new', async(req, res)=>{
       const otpToSend = utils.getOtp();
       const messageBody = `Thanks for your time and interest in our website, Otp for verification of your phone number ${phoneNumber} is ${otpToSend}`;
       await otpUtil.sendOtp("Aaya", phoneNumber, messageBody);
+      // console.log("here")
       const otp = new Otp({entity: phoneNumber, otp: otpToSend});
       await otp.save();
       res.send(utils.responseUtil(200, "Otp sent successfully", null));
