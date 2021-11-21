@@ -47,21 +47,27 @@ exports.getAvailableServiceProviders = async (matchingServiceProviders, startDat
     for (const request in associatedRequests){
       if (parseDate(request.endDate) == parseDate(startDate) && (request.endTimeDay + ":00") <  (startTimeDay + ":00"))
       {
-        serviceProviderFound = true
-        break;
+        if (request.status != "Confirmed"){
+          serviceProviderFound = true
+          break;
+        }
       }
       else if (parseDate(request.startDate) == parseDate(endDate) && (request.startTimeDay + ":00") >  (endTimeDay + ":00"))
       {
-        serviceProviderFound = true
-        break;
+        if (request.status != "Confirmed"){
+          serviceProviderFound = true
+          break;
+        }
       }
       else if (parseDate(request.endDate) < parseDate(startDate) || parseDate(request.startDate) > parseDate(endDate))
       {
-        serviceProviderFound = true
-        break;
+        if (request.status != "Confirmed"){
+          serviceProviderFound = true
+          break;
+        }
       }
     }
-    if (serviceProviderFound){
+    if (serviceProviderFound || associatedRequests.length == 0){
       availableServiceProviders.push(serviceProvider);
     }
   }

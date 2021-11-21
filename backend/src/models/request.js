@@ -9,15 +9,11 @@ const requestSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  ServiceProviderId: {
+  serviceProviderId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   startDate: {
-    type: String,
-    required: true,
-  },
-  endDate: {
     type: String,
     required: true,
   },

@@ -4,6 +4,7 @@ const helper = require('./helper');
 const Client = require('../models/client');
 const Patient = require('../models/patient');
 const Request = require('../models/request');
+const mongoose = require('mongoose');
 const ServiceProvider = require('../models/serviceProvider');
 
 const router = new express.Router();
@@ -26,26 +27,46 @@ router.post('/signup', async (req, res)=>{
 
 router.post('/registerPatientRequest', async(req, res)=>{
   try{
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
-    const startTimeDay = req.body.startTimeDay;
-    const endTimeDay = req.body.endTimeDay;
-    delete req.body.startDate;
-    delete req.body.endDate;
-    delete req.body.startTimeDay;
-    delete req.body.endTimeDay;
+    delete req.body.startDate; delete req.body.endDate; delete req.body.startTimeDay; delete req.body.endTimeDay;
     const patient = new Patient(req.body);
     await patient.save();
     const matchingServiceProviders = await ServiceProvider.find({
       serviceType: patient.requirement,
       pincode: patient.pinCode
     });
-    let availableServiceProviders = await helper.getAvailableServiceProviders();
+    let availableServiceProviders = await helper.getAvailableServiceProviders(matchingServiceProviders, req.body.startDate, req.body.endDate,
+      req.body.startTimeDay, req.body.endTimeDay);
     const filteredList = helper.filterServiceProvider(availableServiceProviders);
     if (filteredList.length == 0){
       throw new Error("No Service Providers Found");
     }
-    res.send(utils.responseUtil(200, "Data Found", filteredList));
+    res.send(utils.responseUtil(200, "Data Found", {filteredList: filteredList, timeSpecs: [req.body.startDate, req.body.endDate,
+      req.body.startTimeDay, req.body.endTimeDay]}));
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null));
+  }
+});
+
+router.post('/notifyServiceProvider', async(req, res)=>{
+  try{
+    const timeSpecs = req.body.timeSpecs; //TODO: Hotfix
+    const requestObj = {
+      clientId: mongoose.Types.ObjectId(req.body.clientId),
+      patientId: mongoose.Types.ObjectId(req.body.patientId),
+      serviceProviderId: mongoose.Types.ObjectId(req.body.serviceProviderId),
+      startDate: timeSpecs[0],
+      endDate: timeSpecs[1],
+      startTimeDay: timeSpecs[2],
+      endTimeDay: timeSpecs[3],
+      calculatedCost: "",
+      status: "notConfirmed",
+      enquiryStartTime:new Date().toString(),
+      FoodProvision:req.body.foodProvision,
+      cancelled: false
+    }
+    const request = new Request(requestObj);
+    await request.save();
+    //TODO: Send the remaining list of nurses
   }catch(err){
     res.send(utils.responseUtil(400, err.message, null));
   }
