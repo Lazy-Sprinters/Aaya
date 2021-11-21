@@ -120,3 +120,5 @@ exports.filterServiceProvider = (serviceProviders) =>{
   }
   return filteredList;
 }
+
+module.exports = {parseDate}

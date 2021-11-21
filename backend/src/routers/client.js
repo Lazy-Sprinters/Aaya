@@ -65,7 +65,7 @@ router.post('/registerPatient', async(req, res)=>{
 router.post('/notifyServiceProvider', async(req, res)=>{
   try{
     const timeSpecs = req.body.timeSpecs; //TODO: Hotfix
-    const daysWorked = (helper.parseDate(timeSpecs[1]) - helper.parseDate(timespecs[0]))/(1000 * 60 * 60 * 24);
+    const daysWorked = (helper.parseDate(timeSpecs[1]) - helper.parseDate(timeSpecs[0]))/(1000 * 60 * 60 * 24);
     const associatedServiceProvider = await ServiceProvider.findOne({"_id":mongoose.Types.ObjectId(req.body.serviceProviderId)})
     const cost = daysWorked * associatedServiceProvider.dailyFees
     const requestObj = {
@@ -86,7 +86,6 @@ router.post('/notifyServiceProvider', async(req, res)=>{
     const request = new Request(requestObj);
     await request.save();
 
-    const associatedServiceProvider = await ServiceProvider.findOne({_id: mongoose.Types.ObjectId(req.body.serviceProviderId)});
     mailer.sendEmail(associatedServiceProvider.email, "A new Request has arrived", "Please check the portal, you have received a request for service.");
     
     const patient = await Patient.findOne({_id: mongoose.Types.ObjectId(req.body.patientId)});
