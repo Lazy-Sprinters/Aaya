@@ -86,6 +86,15 @@ const serviceProviderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  rating: {
+    type: Number,
+    required: true,
+    default: 5
+  },
+  reviews:[{
+    text:{type:String},
+    reviewRating:{type:Number,default:5}
+  }],
   token: {
     type: String,
   },
