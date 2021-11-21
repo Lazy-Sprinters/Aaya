@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { CustomModal } from "./styles";
 
 const TnC = ({ isModalVisible, hideModal,handleTnC }) => {
-    
+    const [acceptStatus,setAcceptStatus] =useState(false);
   return (
     <CustomModal
     //   title="Terms And Conditions"
@@ -16,7 +16,7 @@ const TnC = ({ isModalVisible, hideModal,handleTnC }) => {
         <Button key="back" onClick={hideModal}>
               Cancel
             </Button>,
-            <Button key="submit" type="primary" onClick={handleTnC}>
+            <Button disabled={!acceptStatus} key="submit" type="primary" onClick={handleTnC}>
               Accept
             </Button>,
       ]}
@@ -38,7 +38,7 @@ const TnC = ({ isModalVisible, hideModal,handleTnC }) => {
       software like Aldus PageMaker including versions of Lorem Ipsum.
     </div>
     <div className="actions">
-      <Checkbox>I have read the T&C and I agree</Checkbox>
+      <Checkbox onChange= {e =>setAcceptStatus(e.target.checked)} >I have read the T&C and I agree</Checkbox>
     </div>
     </CustomModal>
   );

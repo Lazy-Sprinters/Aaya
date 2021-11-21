@@ -1,9 +1,10 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Upload } from "antd";
-import { Axios } from "axios";
+import { Button, Checkbox, DatePicker, notification, Upload } from "antd";
+import Axios from "axios";
 import React, { useState } from "react";
 import TnC from "../../components/Modals/TnC";
 import { Footer } from "../../pages/Home/styles";
+import { useSelector } from "react-redux";
 import {
   ActionContainer,
   CustomForm,
@@ -14,6 +15,9 @@ import {
   FormWrapper,
   SubmitButton,
 } from "../styles";
+import { ROOT_URL } from "../../App";
+import { isEmpty } from "lodash";
+import { useNavigate } from "react-router-dom";
 
 const plainOptions = ["Nanny", "Nurse"];
 
@@ -21,6 +25,11 @@ const RegisterServiceProvider = () => {
   const [checkedList, setCheckedList] = React.useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [uploadedURLs, setUploadedURLs] = useState(["", "", ""]);
+  const [uploadedFiles, setUploadedFiles] = useState([[], [], []]);
+  const phoneNumber = useSelector((state) => state.phoneNumber);
+  const role = useSelector((state) => state.role);
+  const navigate = useNavigate();
+
   const onChange = (list) => {
     setCheckedList(list);
   };
@@ -52,25 +61,52 @@ const RegisterServiceProvider = () => {
     (index) =>
     ({ fileList }) => {
       console.log(fileList);
-      let formData = new FormData();
-      formData.append("file", fileList[0].originFileObj);
-      let updatedURLs = uploadedURLs;
-    //   Axios.post("", formData)
-    //     .then((res) => {
-    //       // Check res
-    //       console.log(res);
-    //       updatedURLs[index] = res;
-    //       setUploadedURLs(updatedURLs);
-    //     })
-    //     .catch((err) => {
-    //       console.log("err", err);
-    //     });
+      let updatedFiles = uploadedFiles;
+      updatedFiles[index] = fileList;
+      setUploadedFiles(updatedFiles);
     };
+
+  const handleUpload = async (index) => {
+    console.log("hey");
+    const fileList = uploadedFiles[index];
+    let formData = new FormData();
+    formData.append("file", fileList[0].originFileObj);
+    let updatedURLs = uploadedURLs;
+    await Axios.post(`${ROOT_URL}/library/upload`, formData)
+      .then((res) => {
+        // Check res
+        console.log(res);
+        if (res.data.status === 200) {
+          updatedURLs[index] = res.data.data.file_url[0];
+          setUploadedURLs(updatedURLs);
+          notification.success({
+            message: `Success`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        } else {
+          notification.error({
+            message: `Error`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+    let updatedFiles = uploadedFiles;
+    updatedFiles[index] = [];
+    setUploadedFiles(updatedFiles);
+  };
+  const back = () => {
+    navigate('/');
+  };
   return (
     <FormBody>
       <ActionContainer>
         <img src="/images/navLogo.svg" alt="logo" />
-        <div>Logout</div>
+        <div onClick={() =>back()}>Back</div>
       </ActionContainer>
       <FormTitle>Enter your Details</FormTitle>
 
@@ -108,7 +144,11 @@ const RegisterServiceProvider = () => {
               { required: true, message: "Please input your phone number!" },
             ]}
           >
-            <CustomInput style={{ width: "100%" }} />
+            <CustomInput
+              value={phoneNumber}
+              readOnly
+              style={{ width: "100%" }}
+            />
           </CustomForm.Item>
           <CustomForm.Item name="address" label="Address">
             <CustomInput.TextArea />
@@ -143,7 +183,7 @@ const RegisterServiceProvider = () => {
           </CustomForm.Item>
           <CustomForm.Item
             name="service"
-            label="Sign Up as: "
+            label="Apply as: "
             className="sign-up-options"
           >
             <Checkbox.Group
@@ -156,21 +196,33 @@ const RegisterServiceProvider = () => {
             <CustomInputNumber style={{ width: "100%" }} />
           </CustomForm.Item>
           <CustomForm.Item name="aadhaarURL" label="Aadhaar Card">
-            <Upload onChange={handleChange(0)} maxCount={1}>
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            <Upload
+              onChange={handleChange(0)}
+              beforeUpload={() => handleUpload(0)}
+              maxCount={1}
+            >
+              <Button icon={<UploadOutlined />}>Click to Select</Button>
             </Upload>
           </CustomForm.Item>
           <CustomForm.Item
             name="certificateURL"
             label="Your Degree/Certificate"
           >
-            <Upload onChange={handleChange(1)} maxCount={1}>
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            <Upload
+              beforeUpload={() => handleUpload(1)}
+              onChange={handleChange(1)}
+              maxCount={1}
+            >
+              <Button icon={<UploadOutlined />}>Click to Select</Button>
             </Upload>
           </CustomForm.Item>
           <CustomForm.Item name="displayPictureURL" label="Display Picture">
-            <Upload onChange={handleChange(2)} maxCount={1}>
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            <Upload
+              beforeUpload={() => handleUpload(2)}
+              onChange={handleChange(2)}
+              maxCount={1}
+            >
+              <Button icon={<UploadOutlined />}>Click to Select</Button>
             </Upload>
           </CustomForm.Item>
           <CustomForm.Item>

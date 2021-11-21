@@ -13,9 +13,11 @@ import {
   FormWrapper,
   SubmitButton,
 } from "../styles";
+import { useNavigate } from "react-router-dom";
 const RegisterCustomer = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [uploadedURLs, setUploadedURLs] = useState(["", ""]);
+  const navigate =useNavigate();
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -23,7 +25,7 @@ const RegisterCustomer = () => {
     //API to register
     const formattedValues = {
       ...values,
-      dob: values["dob"].format("YYYY-MM-DD"),
+      dob: values["dob"].format("DD/MM/YYYY"),
       aadhaarURL: uploadedURLs[0],
       displayPictureURL: uploadedURLs[1],
     };
@@ -54,12 +56,14 @@ const RegisterCustomer = () => {
       //       console.log("err", err);
       //     });
     };
-
+    const back = () => {
+      navigate('/');
+    };
   return (
     <FormBody>
       <ActionContainer>
         <img src="/images/navLogo.svg" alt="logo" />
-        <div>Logout</div>
+        <div onClick={() =>back()}>Back</div>
       </ActionContainer>
       <FormTitle>Enter your Details</FormTitle>
 

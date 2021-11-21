@@ -26,4 +26,10 @@ export const CustomModal = styled(Modal)`
 
       }
   }
+  .detail{
+      font-size:2vh;
+      font-weight: bold;
+      display:flex;
+      justify-content:center;
+  }
 `;

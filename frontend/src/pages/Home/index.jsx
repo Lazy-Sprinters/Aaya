@@ -18,24 +18,25 @@ import {
   LockOutlined,
   MessageOutlined,
   PhoneOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import { Row, Checkbox, Radio } from "antd";
+import { useDispatch } from "react-redux";
+import { Row, Checkbox, Radio, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { ROOT_URL } from "../../App";
+import * as actionTypes from "../../store/actions";
 
 const { TabPane } = CustomTabs;
-
-const plainOptions = ["Customer", "Nanny/Nurse"];
 
 const Home = () => {
   const [isModalVisible, setModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [otpStatus, setOtpStatus] = useState("GET CODE");
+  const [otp, setOtp] = useState("");
+  const [otpStatus, setOtpStatus] = useState("Get Code");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const showLoginModal = () => {
     setModalShow(true);
@@ -52,24 +53,31 @@ const Home = () => {
     setModalShow(false);
   };
 
-  const handleAction = () => {
-    if (activeTab === "login") {
-      handleLogin();
-    } else {
-      handleSignUp();
-    }
-  };
   const handleLogin = (values) => {
     // API Call for login
     console.log(values);
-    navigate("");
+    // navigate("/admin");
+    if(values.role==="client"){
+      navigate("/client");
+    }
+    else{
+      navigate("/service");
+    }
   };
 
   const handleSignUp = (values) => {
     // API Call for SignUp
     console.log(values);
-
-    navigate("/registerCustomer");
+    dispatch({
+      type: actionTypes.CHANGE_ROLE,
+      role:values.role,
+    });
+    if(values.role==="client"){
+      navigate("/registerCustomer");
+    }
+    else{
+      navigate("/registerSP");
+    }
   };
 
   const handleTabChange = (key) => {
@@ -79,29 +87,95 @@ const Home = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
+  const getCodeDisable = () => {
+    if (otpStatus === "Get Code") {
+      return phoneNumber.length !== 10;
+    } else if (otpStatus === "Verify Code") {
+      return otp.length !== 6;
+    } else {
+      return false;
+    }
+  };
   const handleGetCode = async () => {
     setLoading(true);
-    console.log(phoneNumber);
-    const values = { entity: phoneNumber, type: "phoneNumber" };
-    await Axios.post(`${ROOT_URL}/otp/new`, values)
-      .then((res) => {
-        console.log(res);
-        setOtpStatus("Verify Code")
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
-      console.log("bahar aa gya")
+    if (otpStatus === "Get Code") {
+      const values = { entity: phoneNumber, type: "phoneNumber" };
+      console.log(values);
+      await Axios.post(`${ROOT_URL}/otp/new`, values)
+        .then((res) => {
+          console.log(res);
+
+          if (res.data.status === 200) {
+            setOtpStatus("Verify Code");
+            notification.success({
+              message: `Success`,
+              description: res.data.message,
+              placement: "bottomLeft",
+            });
+            setLoading(false);
+          } else {
+            notification.error({
+              message: `Error- Some Problem Occurred`,
+              description: res.data.message,
+              placement: "bottomLeft",
+            });
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+          setLoading(false);
+        });
+    } else {
+      const values = { entity: phoneNumber, otp: otp };
+      console.log(values);
+      await Axios.post(`${ROOT_URL}/otp/verify`, values)
+        .then((res) => {
+          console.log(res);
+          if (res.data.status === 200) {
+            setOtpStatus("Verified");
+            dispatch({
+              type: actionTypes.VERIFY_PHONE,
+              phoneNumberVerified: true,
+              phoneNumber,
+            });
+            notification.success({
+              message: `Success`,
+              description: res.data.message,
+              placement: "bottomLeft",
+            });
+            setLoading(false);
+          } else {
+            notification.error({
+              message: `Error- Invalid OTP`,
+              description: res.data.message,
+              placement: "bottomLeft",
+            });
+            dispatch({
+              type: actionTypes.VERIFY_PHONE,
+              phoneNumberVerified: false,
+              phoneNumber:null,
+            });
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+          setLoading(false);
+        });
+    }
   };
 
   return (
+
     <HomeBody>
+    
       <ActionContainer>
         <div onClick={showSignUpModal}>Sign Up</div>
         <div onClick={showLoginModal}>Login</div>
       </ActionContainer>
+    
+
       <HeaderContainer>
         <div>
           <div className="title">Aaya</div>
@@ -113,6 +187,8 @@ const Home = () => {
           </div>
         </div>
       </HeaderContainer>
+
+
       <AboutContainer>
         <div className="about-wrapper">
           <img src="https://picsum.photos/800" className="about" alt="about" />
@@ -130,10 +206,14 @@ const Home = () => {
           </div>
         </div>
       </AboutContainer>
+
+
       <Footer>
         <div>© LazySprinters 2021 </div>
         <div>Terms and Condition</div>
       </Footer>
+
+
       {isModalVisible && (
         <CustomModal
           style={{ top: 300 }}
@@ -145,7 +225,7 @@ const Home = () => {
           <CustomTabs defaultActiveKey={activeTab} onChange={handleTabChange}>
             <TabPane tab="Login" key="login">
               <CustomForm
-                name="basic"
+                name="LoginForm"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 initialValues={{ remember: true }}
@@ -199,7 +279,7 @@ const Home = () => {
                     <Checkbox>Remember me</Checkbox>
                   </CustomForm.Item>
 
-                  <a className="forget" href="">
+                  <a className="forget" href="https://www.google.com">
                     Forgot your password ?
                   </a>
                 </CustomForm.Item>
@@ -213,7 +293,7 @@ const Home = () => {
             </TabPane>
             <TabPane tab="Sign Up" key="signup">
               <CustomForm
-                name="basic"
+                name="SignUpForm"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 initialValues={{ remember: true }}
@@ -228,6 +308,8 @@ const Home = () => {
                       required: true,
                       message: "Please input your Phone Number!",
                     },
+                    { min: 10, message: "Username must be of 10 numbers." },
+                    { max: 10, message: "Username must be of 10 numbers." },
                   ]}
                 >
                   <CustomInput
@@ -240,12 +322,18 @@ const Home = () => {
                 <Row>
                   <CustomForm.Item name="verification code">
                     <CustomInputCode
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
                       placeholder="Enter your verification code"
                       prefix={<MessageOutlined className="prefix-icons" />}
                     />
                   </CustomForm.Item>
                   <CustomForm.Item name="verification code">
-                    <GetCodeButton loading={loading} onClick={handleGetCode}>
+                    <GetCodeButton
+                      loading={loading}
+                      disabled={getCodeDisable()}
+                      onClick={handleGetCode}
+                    >
                       {otpStatus}
                     </GetCodeButton>
                   </CustomForm.Item>
@@ -261,7 +349,11 @@ const Home = () => {
                   </Radio.Group>
                 </CustomForm.Item>
                 <CustomForm.Item>
-                  <SignInButton type="primary" htmlType="submit">
+                  <SignInButton
+                    disabled={otpStatus !== "Verified"}
+                    type="primary"
+                    htmlType="submit"
+                  >
                     Sign Up
                   </SignInButton>
                 </CustomForm.Item>
