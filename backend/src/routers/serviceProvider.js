@@ -24,7 +24,7 @@ router.post('/signup', async (req, res)=>{
 
 router.post('/confirm', async (req, res) => {
   try {
-    let pendingRequest = await Request.findOne({'_id': req.body.requestId})
+    let pendingRequest = await Request.findOne({'_id': mongoose.Types.ObjectId(req.body.requestId)})
     const localTime = new Date().getTime()
     const pendingRequestEnquiryStartTime = new Date(pendingRequest.enquiryStartTime).getTime()
     if ((localTime - pendingRequestEnquiryStartTime)/(1000 * 3600) < 24 ) {
