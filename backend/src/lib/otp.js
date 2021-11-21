@@ -3,13 +3,12 @@ const path = require("path");
 
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
-const sendOtp = async (from, to, text) => {
+const sendOtp =  (from, to, text) => {
   const vonage = new Vonage({
     apiKey: process.env.VonageAPIKEY,
     apiSecret: process.env.VonageAPISECRET,
   });
-  to = "91"+to;
-  await vonage.message.sendSms(from, to, text);
+  vonage.message.sendSms(from, to, text);
   // console.log(response);
 };
 
