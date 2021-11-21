@@ -4,6 +4,7 @@ const Client = require('../models/client');
 const ServiceProvider = require('../models/serviceProvider');
 const Request = require('../models/request')
 const mongoose = require('mongoose');
+const mailer = require('../lib/mailer');
 
 const router = new express.Router();
 
@@ -23,7 +24,7 @@ router.post('/signup', async (req, res)=>{
   }
 });
 
-router.post('/confirm', async (req, res) => {
+router.post('/confirmRequest', async (req, res) => {
   try {
     let pendingRequest = await Request.findOne({'_id': mongoose.Types.ObjectId(req.body.requestId)})
     const localTime = new Date().getTime()
@@ -51,6 +52,36 @@ router.post('/confirm', async (req, res) => {
   } catch (err) {
     res.send(utils.responseUtil(400, err.message, null))
   }
-})
+});
+
+router.post('/rejectRequest', async (req, res) => {
+  try{
+    const request = await Request.findOne({'_id': mongoose.Types.ObjectId(req.body.requestId)});
+    const client = await Client.findOne({'_id': request.clientId});
+    const serviceProvider = await ServiceProvider.findOne({'_id': request.serviceProviderId});
+
+    mailer.sendEmail(client.email, "Request rejected by Service Provider", "This is to inform you that your request has been rejected by one of the service providers");
+
+    await request.remove();
+    const allPendingRequestsForServiceProvider = await Request.find({status: "notConfirmed",
+      serviceProviderId: mongoose.Types.ObjectId(serviceProvider._id)});
+    res.send(utils.responseUtil(200, "Session Confirmed", {pendingRequests: allPendingRequestsForServiceProvider}))
+
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
+router.post('/getAllRequests', async (req, res) => {
+  try{
+    const serviceProviderId = req.body.serviceProviderId;
+    const allPendingRequestsForServiceProvider = await Request.find({status: "notConfirmed", serviceProviderId: serviceProviderId});
+    res.send(utils.responseUtil(200, "Request success", {pendingRequests: allPendingRequestsForServiceProvider}))
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
+
 
 module.exports = router

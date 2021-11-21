@@ -42,6 +42,23 @@ router.post('/approveClient', async (req, res) =>{
   }catch(err){
     res.send(utils.responseUtil(400, err.message, null));
   }
+});
+
+router.post('/rejectClient', async (req, res) =>{
+  try{
+    const clientId = req.body.clientId;
+    const client = await Client.findOne({_id: mongoose.Types.ObjectId(clientId)});
+
+    //send rejection mail
+    mailer.sendEmail(client.email, "Account Verification Status Update", "Greeting, we regret to inform you that your account is marked as unverified by our operation team due to some issue with your documents and you won't be able to use the platform.\nSorry for the inconvenience.\nBut can apply again with more solid of documents.");
+    await client.remove();
+
+    let pendingApprovalClients = await helper.listPendingClientVerificationRequests();
+    res.send(utils.responseUtil(200, "Request Successful", {pendingApprovalClients: pendingApprovalClients}));
+
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null));
+  }
 })
 
 router.post('/listPendingApprovalServiceProviders', async (req, res)=>{
@@ -68,6 +85,22 @@ router.post('/approveServiceProvider', async (req, res) =>{
     res.send(utils.responseUtil(400, err.message, null));
   }
 });
+
+router.post('/rejectServiceProvider', async (req, res) =>{
+  try{
+    const serviceProviderId = req.body.serviceProviderId;
+    const serviceProvider = await ServiceProvider.findOne({_id: mongoose.Types.ObjectId(serviceProviderId)});
+    
+    //send rejection mail
+    mailer.sendEmail(serviceProvider.email, "Account Verification Status Update", "Greeting, we regret to inform you that your account is marked as unverified by our operation team due to some issue with your documents and you won't be able to use the platform.\nSorry for the inconvenience.\nBut can apply again with more solid of documents.");
+    await serviceProvider.remove();
+    
+    let pendingApprovalServiceProviders = await helper.listPendingServiceProvidertVerificationRequests();
+    res.send(utils.responseUtil(200, "Request Successful", {pendingApprovalServiceProviders: pendingApprovalServiceProviders}));
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null));
+  }
+})
 
 // router.post('/listCancellationRequests', async (req, res)=>{
 

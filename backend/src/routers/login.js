@@ -30,7 +30,8 @@ router.post('/', async (req, res)=>{
       const associatedServiceProviderResponse = utils.removeExtraKeysFromResponse(associatedServiceProvider);
       const pendingRequests = await Request.find({serviceProviderId: mongoose.Types.ObjectId(associatedServiceProviderResponse._id),
         status: "notConfirmed"})
-      res.send(utils.responseUtil(200, "Login Successful", {pendingRequests: pendingRequests}));
+      res.send(utils.responseUtil(200, "Login Successful", {pendingRequests: pendingRequests,
+        serviceProviderId: associatedServiceProviderResponse._id}));
     }
     else if (role == "admin"){
       let adminResponse =await Admin.findByCredentials(req.body.phoneNumber, req.body.password);

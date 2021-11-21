@@ -11,7 +11,6 @@ exports.listPendingClientVerificationRequests = async () =>{
     let currClient = client;
     currClient.password="";
     filteredArray.push(currClient);
-    console.log(currClient);
   }
   return filteredArray;
 }
@@ -23,7 +22,6 @@ exports.listPendingServiceProvidertVerificationRequests = async () => {
     let currServiceProvider = serviceProvider;
     currServiceProvider.password="";
     filteredArray.push(currServiceProvider);
-    console.log(currServiceProvider);
   }
   return filteredArray;
 }
