@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
+const path = require('path');
+
 require('dotenv').config({path: path.resolve(__dirname, '../../.env')})
 
 const serviceProviderSchema = new mongoose.Schema({
@@ -90,6 +93,10 @@ const serviceProviderSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  identityVerified: {
+    type: Boolean,
+    default: false
+  }
 });
 
 
@@ -104,10 +111,10 @@ serviceProviderSchema.methods.generateToken = async function () {
   return token;
 }
 
-serviceProviderSchema.statics.findByCredentials = (userPhone, password) => {
-  const user = await ServiceProvider.findOne({phoneNumber: userId, password: password, blocked: false, phoneNumberVerified: true});
+serviceProviderSchema.statics.findByCredentials = async (userPhone, password) => {
+  const user = await ServiceProvider.findOne({phoneNumber: userId, password: password, blocked: false, phoneNumberVerified: true, identityVerified: true});
   if (!user) {
-    throw new Error('Unable to login');
+    throw new Error('Login Failed');
   } 
   const isMatch = await bcrypt.compare(user.password, password);
   if(!isMatch) {

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
+const path = require('path');
 
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -79,6 +81,10 @@ const clientSchema = new mongoose.Schema({
   blocked: {
     type: Boolean,
     default: false
+  },
+  identityVerified: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -94,8 +100,8 @@ clientSchema.methods.generateToken = async function(){
 
 }
 
-clientSchema.statics.findByCredentials = (userPhone, password) =>{
-  const user = await Client.findOne({phoneNumber: userPhone, password: password, blocked: false, phoneNumberVerified: true});
+clientSchema.statics.findByCredentials = async (userPhone, password) =>{
+  const user = await Client.findOne({phoneNumber: userPhone, password: password, blocked: false, phoneNumberVerified: true,  identityVerified: true});
   if (user){
     throw new Error("User not found");
   }

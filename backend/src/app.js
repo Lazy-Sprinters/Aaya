@@ -18,11 +18,19 @@ app.use(morgan("dev"));
 //Router Setups
 const libraryRouter = require('./routers/library');
 const loginRouter = require('./routers/login');
+const clientRouter = require('./routers/client');
+const serviceProviderRouter = require('./routers/serviceProvider');
+const adminRouter = require('./routers/admin');
+const otpRouter = require('./routers/otp');
 
 
 //assigning paths
 app.use('/library/upload', libraryRouter);
 app.use('/login', loginRouter);
+app.use('/client', clientRouter)
+app.use('/serviceProvider', serviceProviderRouter);
+app.use('/admin', adminRouter);
+app.use('/otp', otpRouter);
 
 
 app.get("/", async (req, res) => {

@@ -27,4 +27,6 @@ router.post('/', async (req, res)=>{
   }catch(err){
     res.send(utils.responseUtil(400, err.message, null));
   }
-})
+});
+
+module.exports = router
