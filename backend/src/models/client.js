@@ -84,7 +84,6 @@ const clientSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    required: true,
     default: 5,
   },
   reviews: [
@@ -117,10 +116,10 @@ clientSchema.statics.findByCredentials = async (userPhone, password) => {
     phoneNumberVerified: true,
     identityVerified: true,
   });
-  if (user) {
+  if (!user) {
     throw new Error("User not found");
   }
-  const passwordMatched = await bcrypt.compare(user.password, password);
+  const passwordMatched = await bcrypt.compare(password, user.password);
   if (!passwordMatched) {
     throw new Error("Either Phone Number or Password is incorrect");
   }

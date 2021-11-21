@@ -1,23 +1,16 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const validator = require("validator");
 const path = require("path");
 
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 const adminSchema = new mongoose.Schema({
-  email: {
+  phoneNumber: {
     type: String,
     required: true,
     unique: true,
     trim: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Email is invalid");
-      }
-    },
   },
   password: {
     type: String,
@@ -36,14 +29,14 @@ adminSchema.methods.generateToken = async function () {
   return token;
 };
 
-adminSchema.statics.findByCredentials = async (email, password) => {
+adminSchema.statics.findByCredentials = async (phoneNumber, password) => {
   const admin = await Admin.findOne({
-    email: email,
+    phoneNumber: phoneNumber,
   });
-  if (admin) {
+  if (!admin) {
     throw new Error("User not found");
   }
-  const passwordMatched = await bcrypt.compare(admin.password, password);
+  const passwordMatched = await bcrypt.compare(password, admin.password);
   if (!passwordMatched) {
     throw new Error("Either Email or Password is incorrect");
   }

@@ -88,7 +88,6 @@ const serviceProviderSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    required: true,
     default: 5,
   },
   reviews: [
@@ -111,11 +110,7 @@ const serviceProviderSchema = new mongoose.Schema({
   identityVerified: {
     type: Boolean,
     default: false,
-  },
-  // cancellationQuota: {
-  //   type: Number, 
-  //   default: 5
-  // }
+  }
 });
 
 serviceProviderSchema.methods.generateToken = async function () {
@@ -134,15 +129,15 @@ serviceProviderSchema.statics.findByCredentials = async (
   password
 ) => {
   const user = await ServiceProvider.findOne({
-    phoneNumber: userId,
+    phoneNumber: userPhone,
     blocked: false,
     phoneNumberVerified: true,
     identityVerified: true,
   });
   if (!user) {
-    throw new Error("Login Failed");
+    throw new Error("User Not found");
   }
-  const isMatch = await bcrypt.compare(user.password, password);
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw new Error("Phone Number/Password is incorrect");
   }
@@ -151,8 +146,8 @@ serviceProviderSchema.statics.findByCredentials = async (
 
 serviceProviderSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    const hash = await bcrypt.hash(this.Password, 8);
-    this.Password = hash;
+    const hash = await bcrypt.hash(this.password, 8);
+    this.password = hash;
   }
   next();
 });

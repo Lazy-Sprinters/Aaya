@@ -42,7 +42,7 @@ const requestSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  FoodProvision:{
+  foodProvision:{
     type: Boolean,
     required: true
   },

@@ -14,7 +14,7 @@ const upload = multer({
 });
 
 //Upload a pdf to GCS.
-router.post('/',upload.single('file'), async (req, res) =>{
+router.post('/', upload.single('file'), async (req, res) =>{
   try{
     if (req.file == undefined || (req.file.mimetype != 'application/pdf' && req.file.mimetype.includes("image") == false)){
       throw new Error("Invalid File/File Format");

@@ -40,7 +40,7 @@ const patientSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  aadharURL: {
+  aadhaarURL: {
     type: String,
     required: true,
   },
