@@ -20,7 +20,7 @@ router.post('/new', async(req, res)=>{
     else if (entityType == 'phoneNumber'){
       const phoneNumber = req.body.entity;
       const messageBody = `Thanks for your time and interest in our website, Otp for verification of your phone number ${phoneNumber} is ${otpToSend}`;
-      // await otpUtil.sendOtp("Aaya", phoneNumber, messageBody);
+      //otpUtil.sendOtp("Aaya", phoneNumber, messageBody);
       await Otp.findCreateOrUpdate(phoneNumber, "123456");
       res.send(utils.responseUtil(200, "Otp sent successfully", null));
     }
