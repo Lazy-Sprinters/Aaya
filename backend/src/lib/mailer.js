@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const path = require("path");
 
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -13,12 +14,13 @@ const sendEmail = async (ReceiverEmail, mailSubject, mailBody) => {
     },
   });
 
-  await transporter.sendMail({
+  const response = await transporter.sendMail({
     from: "Aaya Developed By Lazy Sprinters",
     to: ReceiverEmail,
     subject: mailSubject,
     text: mailBody,
   });
+  console.log(response);
 };
 
 module.exports = {sendEmail};
