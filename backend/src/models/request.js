@@ -9,15 +9,11 @@ const requestSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  ServiceProviderId: {
+  serviceProviderId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   startDate: {
-    type: String,
-    required: true,
-  },
-  endDate: {
     type: String,
     required: true,
   },
@@ -39,16 +35,24 @@ const requestSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["notConfirmed", "Confirmed"],
+    enum: ["notConfirmed", "Confirmed", "Completed"],
     default: "notConfirmed"
   },
   enquiryStartTime:{
     type: String,
     required: true
   },
-  FoodProvision:{
+  foodProvision:{
     type: Boolean,
     required: true
+  },
+  cancelled: {
+    type: Boolean,
+    default: false
+  },
+  cancellationReason: {
+    type: String,
+    default: ""
   }
 });
 

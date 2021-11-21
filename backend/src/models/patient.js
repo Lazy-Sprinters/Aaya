@@ -7,7 +7,7 @@ const patientSchema = new mongoose.Schema({
     trim: true
   },
   dob: {
-    type: Date,
+    type: String,
     required: true,
     trim: true
   },
@@ -40,7 +40,7 @@ const patientSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  aadharURL: {
+  aadhaarURL: {
     type: String,
     required: true,
   },
@@ -54,6 +54,11 @@ const patientSchema = new mongoose.Schema({
     trim: true
   },
   patientNotes: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  requirement: {
     type: String,
     required: true,
     trim: true

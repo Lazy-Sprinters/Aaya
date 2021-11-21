@@ -23,7 +23,6 @@ const serviceProviderRouter = require('./routers/serviceProvider');
 const adminRouter = require('./routers/admin');
 const otpRouter = require('./routers/otp');
 
-
 //assigning paths
 app.use('/library/upload', libraryRouter);
 app.use('/login', loginRouter);
