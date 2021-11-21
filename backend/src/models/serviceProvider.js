@@ -104,6 +104,10 @@ const serviceProviderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  yearsOfExperience: {
+    type: Number, 
+    default: 0
+  },
   identityVerified: {
     type: Boolean,
     default: false,

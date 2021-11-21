@@ -39,7 +39,7 @@ const requestSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["notConfirmed", "Confirmed"],
+    enum: ["notConfirmed", "Confirmed", "Completed"],
     default: "notConfirmed"
   },
   enquiryStartTime:{
