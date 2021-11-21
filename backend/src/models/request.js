@@ -49,6 +49,14 @@ const requestSchema = new mongoose.Schema({
   FoodProvision:{
     type: Boolean,
     required: true
+  },
+  cancelled: {
+    type: Boolean,
+    default: false
+  },
+  cancellationReason: {
+    type: String,
+    default: ""
   }
 });
 

@@ -7,6 +7,7 @@ const otpSchema = new mongoose.Schema({
   entity:{
     type: String,
     required: true,
+    unique: true,
     trim: true
   },
   otp:{

@@ -16,13 +16,13 @@ router.post('/', async (req, res)=>{
       const associatedClient = client.findByCredentials(req.body.phoneNumber, req.body.password);
       associatedClient.token = associatedClient.generateToken();
       const clientResponse = utils.removeExtraKeysFromResponse(associatedClient);
-      res.send(utils.responseUtil(400, err.message, null));
+      res.send(utils.responseUtil(200, "Login Successful", clientResponse));
     }
     else if (role == "serviceProvider"){
       const associatedServiceProvider = serviceProvider.findByCredentials(req.body.phoneNumber, req.body.password);
       associatedServiceProvider.token = associatedServiceProvider.generateToken();
-      const clientResponse = utils.removeExtraKeysFromResponse(associatedServiceProvider);
-      res.send(utils.responseUtil(400, err.message, null));
+      const associatedServiceProviderResponse = utils.removeExtraKeysFromResponse(associatedServiceProvider);
+      res.send(utils.responseUtil(200, "Login Successful", associatedServiceProviderResponse));
     }
   }catch(err){
     res.send(utils.responseUtil(400, err.message, null));
