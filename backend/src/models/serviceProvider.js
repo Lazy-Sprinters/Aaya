@@ -82,7 +82,7 @@ const serviceProviderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  hourlyFees: {
+  dailyFees: {
     type: Number,
     required: true,
   },
