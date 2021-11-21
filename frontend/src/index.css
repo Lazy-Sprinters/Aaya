@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family: "GraphikRegular";  
+
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@font-face {
+  font-family: "GraphikRegular";
+  src: local("GraphikRegular"),
+    url("./fonts/GraphikRegular.otf") format("opentype");
+  font-weight: normal;
+}
