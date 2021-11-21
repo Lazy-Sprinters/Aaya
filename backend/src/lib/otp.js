@@ -8,6 +8,7 @@ const sendOtp =  (from, to, text) => {
     apiKey: process.env.VonageAPIKEY,
     apiSecret: process.env.VonageAPISECRET,
   });
+  to = "91"+to;
   vonage.message.sendSms(from, to, text);
   // console.log(response);
 };
