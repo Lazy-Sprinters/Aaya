@@ -65,6 +65,9 @@ router.post('/registerPatient', async(req, res)=>{
 router.post('/notifyServiceProvider', async(req, res)=>{
   try{
     const timeSpecs = req.body.timeSpecs; //TODO: Hotfix
+    const daysWorked = (helper.parseDate(timeSpecs[1]) - helper.parseDate(timespecs[0]))/(1000 * 60 * 60 * 24);
+    const associatedServiceProvider = await ServiceProvider.findOne({"_id":mongoose.Types.ObjectId(req.body.serviceProviderId)})
+    const cost = daysWorked * associatedServiceProvider.dailyFees
     const requestObj = {
       clientId: mongoose.Types.ObjectId(req.body.clientId),
       patientId: mongoose.Types.ObjectId(req.body.patientId),
@@ -73,7 +76,7 @@ router.post('/notifyServiceProvider', async(req, res)=>{
       endDate: timeSpecs[1],
       startTimeDay: timeSpecs[2],
       endTimeDay: timeSpecs[3],
-      calculatedCost: 5000,
+      calculatedCost: cost,
       status: "notConfirmed",
       enquiryStartTime:new Date().toString(),
       foodProvision:req.body.foodProvision,
