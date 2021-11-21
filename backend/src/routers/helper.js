@@ -1,7 +1,7 @@
 const utils = require('../lib/util');
 const Client = require('../models/client');
 const ServiceProvider = require('../models/serviceProvider');
-const let = require('../models/request');
+const Request = require('../models/request');
 
 exports.listPendingClientVerificationRequests = async () =>{
   let pendingApprovalClients = await Client.find({identityVerified: false});
