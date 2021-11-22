@@ -86,6 +86,10 @@ const clientSchema = new mongoose.Schema({
     type: Number,
     default: 5,
   },
+  totalRating: {
+    type: Number,
+    default: 5
+  },
   reviews: [
     {
       text: { type: String },

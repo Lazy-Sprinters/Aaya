@@ -5,6 +5,7 @@ const ServiceProvider = require('../models/serviceProvider');
 const Request = require('../models/request')
 const mongoose = require('mongoose');
 const mailer = require('../lib/mailer');
+const reviewUtil = require('../lib/review');
 
 const router = new express.Router();
 
@@ -77,6 +78,74 @@ router.post('/getAllRequests', async (req, res) => {
     const serviceProviderId = req.body.serviceProviderId;
     const allPendingRequestsForServiceProvider = await Request.find({status: "notConfirmed", serviceProviderId: serviceProviderId});
     res.send(utils.responseUtil(200, "Request success", {pendingRequests: allPendingRequestsForServiceProvider}))
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
+router.post('/pastRequests', async (req, res) => {
+  try{
+    const serviceProviderId = req.body.serviceProviderId;
+    const requests = await Request.find({status: "Completed", serviceProviderId: mongoose.Types.ObjectId(serviceProviderId)});
+    res.send(utils.responseUtil(200, "Request success", {allCompletedRequests: requests}))
+    
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
+router.post('/currentRequests', async (req, res)=>{
+  try{
+    const serviceProviderId = req.body.serviceProviderId;
+    const requests = await Request.find({status: "Confirmed", serviceProviderId: mongoose.Types.ObjectId(serviceProviderId)});
+    res.send(utils.responseUtil(200, "Request success", {allCurrentRequests: requests}))
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
+router.post('/cancelRequest', async (req, res)=>{
+  try{
+    const requestId = req.body.requestId;
+    const request = await Request.findOne({'_id': requestId});
+    request.cancelled = true;
+    request.cancellationReason = req.body.reason;
+    request.status = "Completed";
+    await request.save();
+    const requests = await Request.find({status: "Confirmed", serviceProviderId: request.serviceProviderId});
+    res.send(utils.responseUtil(200, "Request success", {allCurrentRequests: requests}))
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
+router.post('/rateClient', async (req, res) => {
+  try{
+    const requestId = req.body.requestId;
+    const request = await Request.findOne({'_id': requestId});
+    const client = await Client.findOne({'_id': request.clientId});
+    if (client.reviews.length == 0){
+      client.rating = req.body.rating;
+      client.totalRating = req.body.rating;
+      const reviewScore = 4 //TODO @samarthya jha add your handler, it is imported
+      client.reviews.push({
+        text: req.body.review,
+        reviewRating: reviewScore
+      });
+      await client.save();
+    }
+    else{
+      client.rating = (client.totalRating + req.body.rating)/(client.reviews.length + 1);
+      client.totalRating += req.body.rating;
+      const reviewScore = 4 //TODO @samarthya jha add your handler, it is imported
+      client.reviews.push({
+        text: req.body.review,
+        reviewRating: reviewScore
+      });
+      await client.save();
+    }
+    const requests = await Request.find({status: "Confirmed", serviceProviderId: request.serviceProviderId});
+    res.send(utils.responseUtil(200, "Request success", {allCurrentRequests: requests}))
   }catch(err){
     res.send(utils.responseUtil(400, err.message, null))
   }

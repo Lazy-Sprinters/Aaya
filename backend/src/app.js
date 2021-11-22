@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const cron =  require('node-cron');
 
 //Db check
 require("./db_config/mongo");
@@ -22,6 +23,7 @@ const clientRouter = require('./routers/client');
 const serviceProviderRouter = require('./routers/serviceProvider');
 const adminRouter = require('./routers/admin');
 const otpRouter = require('./routers/otp');
+const Request = require('./models/request');
 
 //assigning paths
 app.use('/library/upload', libraryRouter);
@@ -39,3 +41,19 @@ app.get("/", async (req, res) => {
 app.listen(port, () => {
   console.log("Server is running on port:", port);
 });
+
+const task=cron.schedule('0 1 * * *',async ()=>{
+  const requests = await Request.find({});
+  for (const request in requests){
+    const requestEndTime = new Date(date.split("/").reverse().join("-"));
+    const currTime = new Date();
+    if (currTime > requestEndTime){
+    request.status = "Completed";
+    await request.save();    
+    }
+  }
+},{
+  scheduled:true,
+  timezone:'Asia/Kolkata'
+});
+task.start();

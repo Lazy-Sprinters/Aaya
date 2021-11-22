@@ -53,6 +53,10 @@ const requestSchema = new mongoose.Schema({
   cancellationReason: {
     type: String,
     default: ""
+  },
+  cancellationApproved: {
+    type: Boolean,
+    default: false
   }
 });
 
