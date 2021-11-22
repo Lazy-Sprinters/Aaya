@@ -5,6 +5,7 @@ require("dotenv").config({path: path.resolve(__dirname, "../../.env")})
 
 const getReviewScore = async (req) => {
     const response = await axios.post(process.env.ReviewAPI,req);
+    console.log(response);
     return response
 }
 

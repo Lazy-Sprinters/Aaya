@@ -7,8 +7,15 @@ const Request = require('../models/request');
 const mongoose = require('mongoose');
 const ServiceProvider = require('../models/serviceProvider');
 const mailer = require('../lib/mailer');
+const reviewUtil = require('../lib/review');
+
 
 const router = new express.Router();
+
+const parseDate = (date) =>{
+  //18/09/2001 => 2001-09-18
+  return new Date(date.split("/").reverse().join("-"));
+}
 
 router.post('/signup', async (req, res)=>{
   try{
@@ -42,12 +49,14 @@ router.post('/registerPatient', async(req, res)=>{
     const patient = new Patient(req.body);
     await patient.save();
     
+    // console.log(patient.requirement);
     const matchingServiceProviders = await ServiceProvider.find({
       serviceType: patient.requirement,
       pinCode: patient.pinCode,
       identityVerified: true,
       blocked: false
     });
+    // console.log(matchingServiceProviders);
     let availableServiceProviders = await helper.getAvailableServiceProviders(matchingServiceProviders, patient._id, startDate, endDate, startTimeDay, endTimeDay);
     
     const filteredList = helper.filterServiceProvider(availableServiceProviders);
@@ -55,7 +64,7 @@ router.post('/registerPatient', async(req, res)=>{
       throw new Error("No Service Providers Found");
     }
     
-    res.send(utils.responseUtil(200, "Data Found", {filteredList: filteredList, timeSpecs: [startDate, endDate, startTimeDay, endTimeDay]}));
+    res.send(utils.responseUtil(200, "Data Found", {filteredList: filteredList, timeSpecs: [startDate, endDate, startTimeDay, endTimeDay], patientId: patient._id}));
   }catch(err){
     console.log(err);
     res.send(utils.responseUtil(400, err.message, null));
@@ -64,8 +73,9 @@ router.post('/registerPatient', async(req, res)=>{
 
 router.post('/notifyServiceProvider', async(req, res)=>{
   try{
+    console.log(req.body);
     const timeSpecs = req.body.timeSpecs; //TODO: Hotfix
-    const daysWorked = (helper.parseDate(timeSpecs[1]) - helper.parseDate(timeSpecs[0]))/(1000 * 60 * 60 * 24);
+    const daysWorked = (parseDate(timeSpecs[1]) - parseDate(timeSpecs[0]))/(1000 * 60 * 60 * 24);
     const associatedServiceProvider = await ServiceProvider.findOne({"_id":mongoose.Types.ObjectId(req.body.serviceProviderId)})
     const cost = daysWorked * associatedServiceProvider.dailyFees
     const requestObj = {
@@ -102,6 +112,7 @@ router.post('/notifyServiceProvider', async(req, res)=>{
     
     res.send(utils.responseUtil(200, "Data Found", {filteredList: filteredList, timeSpecs: timeSpecs}));
   }catch(err){
+    console.log(err);
     res.send(utils.responseUtil(400, err.message, null));
   }
 })
@@ -113,6 +124,61 @@ router.post('/viewServiceProviderDetails', async(req,res) => {
   } catch (err) {
     res.send(utils.responseUtil(400,err.message,null))
   }
-})
+});
+
+router.post('/pastRequests', async (req, res) => {
+  try{
+    const clientId = req.body.clientId;
+    const requests = await Request.find({status: "Completed", clientId: mongoose.Types.ObjectId(clientId)});
+    res.send(utils.responseUtil(200, "Request success", {allCompletedRequests: requests}))
+    
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
+router.post('/currentRequests', async (req, res)=>{
+  try{
+    const clientId = req.body.clientId;
+    const requests = await Request.find({status: "Confirmed", clientId: mongoose.Types.ObjectId(clientId)});
+    res.send(utils.responseUtil(200, "Request success", {allCurrentRequests: requests}))
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
+router.post('/rateServiceProvider', async (req, res) => {
+  try{
+    const requestId = req.body.requestId;
+    const request = await Request.findOne({'_id': requestId});
+    const serviceProvider = await ServiceProvider.findOne({'_id': request.serviceProviderId});
+    if (serviceProvider.reviews.length == 0){
+      serviceProvider.rating = req.body.rating;
+      serviceProvider.totalRating = req.body.rating;
+      const reviewScore = 4 //TODO @samarthya jha add your handler, it is imported
+      serviceProvider.reviews.push({
+        text: req.body.review,
+        reviewRating: reviewScore
+      });
+      await serviceProvider.save();
+    }
+    else{
+      serviceProvider.rating = (serviceProvider.totalRating + req.body.rating)/(serviceProvider.reviews.length + 1);
+      serviceProvider.totalRating += req.body.rating;
+      const reviewScore = await reviewUtil.getReviewScore({review: req.body.review}); //TODO @samarthya jha add your handler, it is imported
+      serviceProvider.reviews.push({
+        text: req.body.review,
+        reviewRating: reviewScore
+      });
+      await serviceProvider.save();
+    }
+    const requests = await Request.find({status: "Confirmed", clientId: request.clientId});
+    res.send(utils.responseUtil(200, "Request success", {allCurrentRequests: requests}))
+  }catch(err){
+    console.log(err);
+    res.send(utils.responseUtil(400, err.message, null))
+  }
+});
+
 
 module.exports = router
