@@ -28,19 +28,14 @@ The main objective of the project is to bring the fruits of technology to the pe
 
 ## Backend
 
-Node JS Runtime Environment
-Firebase
-MongoDB
-Express
+Node JS Runtime Environment, Firebase, MongoDB, Express
 
 ## Frontend
 
-HTML/CSS/JS
-React with Redux State Management
+HTML/CSS/JS, React with Redux State Management
 
 ## NLP
 
-Flask
-Spacy
+Flask, Spacy
 
 
