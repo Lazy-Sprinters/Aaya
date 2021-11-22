@@ -111,7 +111,7 @@ exports.filterServiceProvider = (serviceProviders) =>{
       serviceType: serviceProvider.serviceType,
       yearsOfExperience: serviceProvider.yearsOfExperience,
       displayPictureURL: serviceProvider.displayPictureURL,
-      hourlyFees: serviceProvider.hourlyFees,
+      dailyFees: serviceProvider.dailyFees,
       rating: serviceProvider.rating,
       reviews: serviceProvider.reviews,
       negativeFeedBackPercentage: (getNegPosPercentage(serviceProvider.reviews)[0]) === null ? 20 : (getNegPosPercentage(serviceProvider.reviews)[0]),

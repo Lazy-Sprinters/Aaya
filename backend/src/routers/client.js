@@ -36,6 +36,7 @@ router.post('/signup', async (req, res)=>{
 
 router.post('/registerPatient', async(req, res)=>{
   try{
+    console.log(req.body);
     const startDate = req.body.startDate; 
     const endDate = req.body.endDate;
     const startTimeDay = req.body.startTimeDay; 
