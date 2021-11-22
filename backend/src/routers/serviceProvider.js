@@ -127,7 +127,7 @@ router.post('/rateClient', async (req, res) => {
     if (client.reviews.length == 0){
       client.rating = req.body.rating;
       client.totalRating = req.body.rating;
-      const reviewScore = 4 //TODO @samarthya jha add your handler, it is imported
+      const reviewScore = await reviewUtil.getReviewScore(req.body)
       client.reviews.push({
         text: req.body.review,
         reviewRating: reviewScore
@@ -137,7 +137,7 @@ router.post('/rateClient', async (req, res) => {
     else{
       client.rating = (client.totalRating + req.body.rating)/(client.reviews.length + 1);
       client.totalRating += req.body.rating;
-      const reviewScore = 4 //TODO @samarthya jha add your handler, it is imported
+      const reviewScore = await reviewUtil.getReviewScore(req.body)
       client.reviews.push({
         text: req.body.review,
         reviewRating: reviewScore
