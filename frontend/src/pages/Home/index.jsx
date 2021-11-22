@@ -53,16 +53,52 @@ const Home = () => {
     setModalShow(false);
   };
 
-  const handleLogin = (values) => {
+  const handleLogin = async (values) => {
     // API Call for login
     console.log(values);
     // navigate("/admin");
-    if(values.role==="client"){
-      navigate("/client");
-    }
-    else{
-      navigate("/service");
-    }
+
+    await Axios.post(`${ROOT_URL}/log/in`, values)
+      .then((res) => {
+        // Check res
+        console.log(res);
+        if (res.data.status === 200) {
+          
+          if (values.role === "admin") {
+            dispatch({
+              type: actionTypes.CHANGE_ADMIN_DATA,
+              admin_data: res.data.data.pendingApprovalClients,
+            });
+            navigate("/admin");
+          } else if (values.role === "client") {
+            dispatch({
+              type: actionTypes.CHANGE_CLIENT_DATA,
+              client_data: res.data.data,
+            });
+            navigate("/client");
+          } else {
+            dispatch({
+              type: actionTypes.CHANGE_SERVICE_DATA,
+              service_data: res.data.data,
+            });
+            navigate("/service");
+          }
+          notification.success({
+            message: `Success`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        } else {
+          notification.error({
+            message: `Error`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   };
 
   const handleSignUp = (values) => {
@@ -70,12 +106,11 @@ const Home = () => {
     console.log(values);
     dispatch({
       type: actionTypes.CHANGE_ROLE,
-      role:values.role,
+      role: values.role,
     });
-    if(values.role==="client"){
+    if (values.role === "client") {
       navigate("/registerCustomer");
-    }
-    else{
+    } else {
       navigate("/registerSP");
     }
   };
@@ -154,7 +189,7 @@ const Home = () => {
             dispatch({
               type: actionTypes.VERIFY_PHONE,
               phoneNumberVerified: false,
-              phoneNumber:null,
+              phoneNumber: null,
             });
             setLoading(false);
           }
@@ -167,19 +202,16 @@ const Home = () => {
   };
 
   return (
-
     <HomeBody>
-    
       <ActionContainer>
         <div onClick={showSignUpModal}>Sign Up</div>
         <div onClick={showLoginModal}>Login</div>
       </ActionContainer>
-    
 
       <HeaderContainer>
         <div>
           <div className="title">Aaya</div>
-          <div className="moto">moto</div>
+          <div className="moto">Let us care of your loved ones</div>
         </div>
         <div>
           <div className="Logo-wrapper">
@@ -187,7 +219,6 @@ const Home = () => {
           </div>
         </div>
       </HeaderContainer>
-
 
       <AboutContainer>
         <div className="about-wrapper">
@@ -207,12 +238,10 @@ const Home = () => {
         </div>
       </AboutContainer>
 
-
       <Footer>
         <div>© LazySprinters 2021 </div>
         <div>Terms and Condition</div>
       </Footer>
-
 
       {isModalVisible && (
         <CustomModal
@@ -260,13 +289,14 @@ const Home = () => {
                   />
                 </CustomForm.Item>
                 <CustomForm.Item
-                  label="Sign Up as: "
+                  label="Login as: "
                   className="sign-up-options"
                   name="role"
                 >
                   <Radio.Group>
-                    <Radio value="client">Customer</Radio>
-                    <Radio value="serviceProvider">Nanny/Nurse</Radio>
+                    <Radio value="admin">Admin</Radio>
+                    <Radio value="client">Client</Radio>
+                    <Radio value="serviceProvider">Service Provider</Radio>
                   </Radio.Group>
                 </CustomForm.Item>
                 <CustomForm.Item className="actions">
@@ -344,8 +374,8 @@ const Home = () => {
                   name="role"
                 >
                   <Radio.Group>
-                    <Radio value="client">Customer</Radio>
-                    <Radio value="serviceProvider">Nanny/Nurse</Radio>
+                    <Radio value="client">Client</Radio>
+                    <Radio value="serviceProvider">Service Provider</Radio>
                   </Radio.Group>
                 </CustomForm.Item>
                 <CustomForm.Item>

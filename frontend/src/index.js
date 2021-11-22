@@ -45,6 +45,10 @@ store.subscribe(() => {
     phoneNumberVerified:store.getState().phoneNumberVerified,
     phoneNumber:store.getState().phoneNumber,
     role:store.getState().role,
+    admin_data:store.getState().admin_data,
+    client_data:store.getState().client_data,
+    client_service_data:store.getState().client_service_data,
+    service_data:store.getState().service_data,
   });
 });
 

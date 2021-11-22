@@ -8,16 +8,17 @@ import { Avatar, Button, Rate } from "antd";
 const { Meta } = CustomCard;
 
 const AdminInfoCard = ({
-  name,
-  phoneNumber,
   imgSrc,
   avatarSrc,
   viewOnClick,
   selectionKey,
   rating,
+  service_client,
   width,
-  feedback
+  feedback,
+  cardDetails,
 }) => {
+  const {name,phoneNumber,displayPictureURL,rating:rating1,calculatedCost} =cardDetails;
   return (
     <CustomCard
       style={{
@@ -28,23 +29,25 @@ const AdminInfoCard = ({
       cover={
         <img
           alt="example"
-          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+          src={displayPictureURL}
         />
       }
       actions={[<div onClick={() => viewOnClick()}>{feedback ? "Give Feedback" :"View"}</div>]}
     >
       <Meta
         avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-        title="Name"
+        title={name}
         description={[
           <div>
-            <p>Phone Number</p>
+          {!service_client &&
+            <p>Phone Number : {phoneNumber}</p>
+          }
             {(selectionKey === "cancel" || rating) && (
               <p>
                 <span>
-                  Rating: <Rate disabled defaultValue={4} />
+                  Rating: <Rate disabled defaultValue={rating1} />
                 </span>
-                {rating && <span className="price">₹ 600</span>}
+                {rating && <span className="price">₹ {calculatedCost}</span>}
               </p>
             )}
           </div>,

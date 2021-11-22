@@ -18,7 +18,7 @@ import ClientService from "./pages/Client/service";
 import ClientBooking from "./pages/Client/booking";
 
 /* Enter URL without ending slash */
-export const ROOT_URL = "https://9525-117-201-76-153.ngrok.io";
+export const ROOT_URL = "https://e2ba-117-201-77-173.ngrok.io";
 
 function App() {
   return (

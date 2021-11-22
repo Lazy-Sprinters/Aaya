@@ -23,6 +23,8 @@ import {
   SubmitButton,
 } from "../styles";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import * as actionTypes from "../../store/actions";
 
 const format = "HH:mm";
 const PatientDetails = () => {
@@ -30,7 +32,10 @@ const PatientDetails = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [uploadedURLs, setUploadedURLs] = useState(["", "", ""]);
   const [uploadedFiles, setUploadedFiles] = useState([[], [], []]);
-  const navigate=useNavigate();
+  const [formattedValues, setFormattedValues] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const clientId = useSelector((state) => state.client_data.clientId);
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -44,17 +49,45 @@ const PatientDetails = () => {
       startTimeDay: values["time"][0].format("HH:mm"),
       endTimeDay: values["time"][1].format("HH:mm"),
       aadhaarURL: uploadedURLs[0],
-      certificateURL: uploadedURLs[1],
       displayPictureURL: uploadedURLs[2],
+      phoneNumberVerified: true,
+      emailVerified: true,
+      clientId,
     };
+    setFormattedValues(formattedValues);
     console.log(formattedValues);
     setModalVisible(true);
-    navigate("/clientService");
   };
   const hideModal = () => {
     setModalVisible(false);
   };
-  const handleTnC = () => {
+  const handleTnC = async () => {
+    await Axios.post(`${ROOT_URL}/client/registerPatient`, formattedValues)
+      .then((res) => {
+        // Check res
+        console.log(res);
+        if (res.data.status === 200) {
+          dispatch({
+            type: actionTypes.CHANGE_CLIENT_SERVICE_DATA,
+            client_service_data: res.data.data
+          });
+          navigate("/clientService");
+          notification.success({
+            message: `Success`,
+            description: "Patient Details stored",
+            placement: "bottomLeft",
+          });
+        } else {
+          notification.error({
+            message: `Error`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
     setModalVisible(false);
   };
   const handleChange =
@@ -72,42 +105,42 @@ const PatientDetails = () => {
     let formData = new FormData();
     formData.append("file", fileList[0].originFileObj);
     let updatedURLs = uploadedURLs;
-    // await Axios.post(`${ROOT_URL}/library/upload`, formData)
-    //   .then((res) => {
-    //     // Check res
-    //     console.log(res);
-    //     if (res.data.status === 200) {
-    //       updatedURLs[index] = res.data.data.file_url[0];
-    //       setUploadedURLs(updatedURLs);
-    //       notification.success({
-    //         message: `Success`,
-    //         description: res.data.message,
-    //         placement: "bottomLeft",
-    //       });
-    //     } else {
-    //       notification.error({
-    //         message: `Error`,
-    //         description: res.data.message,
-    //         placement: "bottomLeft",
-    //       });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log("err", err);
-    //   });
+    await Axios.post(`${ROOT_URL}/library/upload`, formData)
+      .then((res) => {
+        // Check res
+        console.log(res);
+        if (res.data.status === 200) {
+          updatedURLs[index] = res.data.data.file_url[0];
+          setUploadedURLs(updatedURLs);
+          notification.success({
+            message: `Success`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        } else {
+          notification.error({
+            message: `Error`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
     let updatedFiles = uploadedFiles;
     updatedFiles[index] = [];
     setUploadedFiles(updatedFiles);
   };
   const logout = () => {
     //APi for logout admin
-    navigate('/');
+    navigate("/");
   };
   return (
     <FormBody>
       <ActionContainer>
         <img src="/images/navLogo.svg" alt="logo" />
-        <div onClick={() =>logout()}>Logout</div>
+        <div onClick={() => logout()}>Logout</div>
       </ActionContainer>
       <FormTitle>Enter your Patient Details</FormTitle>
 
@@ -159,12 +192,12 @@ const PatientDetails = () => {
             className="sign-up-options"
           >
             <Radio.Group>
-              <Radio value="nurse">Nurse</Radio>
-              <Radio value="nanny">Nanny</Radio>
+              <Radio value="Nurse">Nurse</Radio>
+              <Radio value="Nanny">Nanny</Radio>
             </Radio.Group>
           </CustomForm.Item>
           <CustomForm.Item name="policePhone" label="Local Police Phone">
-            <CustomInputNumber />
+            <CustomInputNumber style={{ width: "100%" }} />
           </CustomForm.Item>
           <CustomForm.Item
             name="emergencyPhone"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ClientBody, ActionContainer, Heading, CustomLayout } from "./styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { ROOT_URL } from "../../App";
@@ -16,8 +16,15 @@ const ClientService = () => {
   const [priceFilter, setPriceFilter] = useState([700, 1500]);
   const [ratingFilter, setRatingFilter] = useState([1, 4]);
   const [screenView, setScreenView] = useState("cards");
+  const [cardData, setData] = useState([]);
+  const [index, setIndex] = useState(0);
   const navigate = useNavigate();
- 
+  const dispatch = useDispatch();
+  const client_service_data = useSelector((state) => state.client_service_data);
+  const clientId = useSelector((state) => state.client_data.clientId);
+  const timeSpecs = useSelector((state) => state.client_service_data.timeSpecs);
+  const patientId = useSelector((state) => state.client_service_data.patientId);
+  
   const onPriceChange = (value) => {
     setPriceFilter(value);
   };
@@ -34,7 +41,8 @@ const ClientService = () => {
     1600: "₹ 1600",
   };
 
-  const viewOnClick = () => {
+  const viewOnClick = (index) => {
+    setIndex(index)
     setScreenView("requestService");
   };
   const logout = () => {
@@ -51,6 +59,7 @@ const ClientService = () => {
   };
   useEffect(() => {
     //API for getting data from redux
+    setData(client_service_data.filteredList);
   }, []);
 
   return (
@@ -67,9 +76,9 @@ const ClientService = () => {
             <Avatar className="avatar" size="small" icon={<UserOutlined />} />
             <span className="Name" onClick={() => openClient()}>Client</span>
           </span>
-          <span className="tab">
+          {/* <span className="tab">
             <span className="Name" onClick={() => openBooking()}>Your Bookings</span>
-          </span>
+          </span> */}
           <span className="tab">
             <span className="Name" onClick={() => logout()}>
               LogOut
@@ -77,7 +86,7 @@ const ClientService = () => {
           </span>
         </div>
       </ActionContainer>
-      <Heading>Yaha tag line aayega</Heading>
+      <Heading>Aaya</Heading>
       <CustomLayout>
         <Row>
           <Sider
@@ -132,12 +141,20 @@ const ClientService = () => {
 
           {screenView === "cards" && (
             <Content className="search-content">
-              <AdminInfoCard rating width={350} viewOnClick={viewOnClick} />
+            {cardData.map((cardDetails, index) => (
+                <AdminInfoCard
+                  rating
+                  width={350}
+                  service_client
+                  cardDetails={cardDetails}
+                  viewOnClick={() => viewOnClick(index)}
+                />
+              ))}
             </Content>
           )}
           {screenView === "requestService" && (
             <Content className="search-content">
-              <ServiceDetailContent setScreenView={setScreenView} />
+              <ServiceDetailContent card_details={cardData[index]} setScreenView={setScreenView} timeSpecs={timeSpecs} clientId={clientId} patientId={patientId} setData={setData}/>
             </Content>
           )}
         </Row>

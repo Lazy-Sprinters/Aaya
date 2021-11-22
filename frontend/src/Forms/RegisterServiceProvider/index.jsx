@@ -25,8 +25,10 @@ const RegisterServiceProvider = () => {
   const [checkedList, setCheckedList] = React.useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [uploadedURLs, setUploadedURLs] = useState(["", "", ""]);
+  const [formattedValues, setFormattedValues] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([[], [], []]);
   const phoneNumber = useSelector((state) => state.phoneNumber);
+  const phoneNumberVerified = useSelector((state) => state.phoneNumberVerified);
   const role = useSelector((state) => state.role);
   const navigate = useNavigate();
 
@@ -41,19 +43,45 @@ const RegisterServiceProvider = () => {
     //API to register
     const formattedValues = {
       ...values,
-      service: checkedList,
+      phoneNumber:phoneNumber,
+      phoneNumberVerified:true,
+      emailVerified:true,
+      serviceType: checkedList,
       dob: values["dob"].format("YYYY-MM-DD"),
       aadhaarURL: uploadedURLs[0],
       certificateURL: uploadedURLs[1],
       displayPictureURL: uploadedURLs[2],
     };
     console.log(formattedValues);
+    setFormattedValues(formattedValues)
     setModalVisible(true);
   };
   const hideModal = () => {
     setModalVisible(false);
   };
-  const handleTnC = () => {
+  const handleTnC = async() => {
+    await Axios.post(`${ROOT_URL}/serviceProvider/signup`, formattedValues)
+    .then((res) => {
+      // Check res
+      console.log(res);
+      if (res.data.status === 201) {
+        navigate("/");
+        notification.success({
+          message: `Success`,
+          description: "Check you email address for further steps",
+          placement: "bottomLeft",
+        });
+      } else {
+        notification.error({
+          message: `Error`,
+          description: res.data.message,
+          placement: "bottomLeft",
+        });
+      }
+    })
+    .catch((err) => {
+      console.log("err", err);
+    });
     setModalVisible(false);
   };
 
@@ -109,7 +137,6 @@ const RegisterServiceProvider = () => {
         <div onClick={() =>back()}>Back</div>
       </ActionContainer>
       <FormTitle>Enter your Details</FormTitle>
-
       <FormWrapper>
         <CustomForm
           name="basic"
@@ -138,11 +165,7 @@ const RegisterServiceProvider = () => {
             <CustomInput.Password />
           </CustomForm.Item>
           <CustomForm.Item
-            name="phoneNumber"
             label="Phone Number"
-            rules={[
-              { required: true, message: "Please input your phone number!" },
-            ]}
           >
             <CustomInput
               value={phoneNumber}
@@ -192,7 +215,7 @@ const RegisterServiceProvider = () => {
               onChange={onChange}
             />
           </CustomForm.Item>
-          <CustomForm.Item name="hourlyFees" label="Hourly Fees">
+          <CustomForm.Item name="dailyFees" label="Daily Fees">
             <CustomInputNumber style={{ width: "100%" }} />
           </CustomForm.Item>
           <CustomForm.Item name="aadhaarURL" label="Aadhaar Card">

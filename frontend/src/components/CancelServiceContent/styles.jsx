@@ -58,13 +58,13 @@ export const CustomContent = styled(Content)`
     }
   }
   .price {
-    margin: 10vh 2vw 20vh 12vw;
-    width: 30vw;
-    font-size: 5vh;
+    margin: 5vh 0 5vh 10vw;
+    width: 20vw;
+    font-size: 4vh;
     .value {
       color: #407fc3;
       font-weight:bold;
-      font-size:6vh;
+      font-size:5vh;
     }
   }
   margin: 30px 0 10vh 0;

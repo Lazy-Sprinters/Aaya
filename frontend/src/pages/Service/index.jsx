@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ServiceBody, ActionContainer, Heading, CustomLayout } from "./styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { ROOT_URL } from "../../App";
@@ -21,8 +21,16 @@ import Feedback from "../../components/Modals/Feedback";
 const Service = () => {
   const [screenView, setScreenView] = useState("requests");
   const [selectionKey, setKey] = useState("requests");
+  const [cardData, setData] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [index, setIndex] = useState(0);
   const navigate = useNavigate();
+  const service_data = useSelector((state) => state.service_data);
+  const token = useSelector((state) => state.service_data.token);
+  const serviceProviderId = useSelector(
+    (state) => state.service_data.serviceProviderId
+  );
+  const dispatch = useDispatch();
 
   const hideModal = () => {
     setModalVisible(false);
@@ -36,17 +44,93 @@ const Service = () => {
       placement: "bottomLeft",
     });
   };
-  const getData = (event) => {
+  const getData = async (event) => {
     const key = event.key;
     setKey(key);
     setScreenView(key);
     console.log(key);
     if (key === "requests") {
+      await Axios.post(`${ROOT_URL}/serviceProvider/getAllRequests`,{serviceProviderId})
+        .then((res) => {
+          // Check res
+          console.log(res);
+          if (res.data.status === 200) {
+            dispatch({
+              type: actionTypes.CHANGE_SERVICE_DATA,
+              service_data: {
+                token,
+                serviceProviderId,
+                pendingRequests: res.data.data.pendingRequests,
+              },
+            });
+            setData(res.data.data.pendingRequests);
+          } else {
+            notification.error({
+              message: `Error`,
+              description: res.data.message,
+              placement: "bottomLeft",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     } else if (key === "current") {
+      await Axios.post(`${ROOT_URL}/serviceProvider/currentRequests`,{serviceProviderId})
+        .then((res) => {
+          // Check res
+          console.log(res);
+          if (res.data.status === 200) {
+            dispatch({
+              type: actionTypes.CHANGE_SERVICE_DATA,
+              service_data: {
+                token,
+                serviceProviderId,
+                allCurrentRequests: res.data.data.allCurrentRequests,
+              },
+            });
+            setData(res.data.data.allCurrentRequests);
+          } else {
+            notification.error({
+              message: `Error`,
+              description: res.data.message,
+              placement: "bottomLeft",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     } else {
+      await Axios.post(`${ROOT_URL}/serviceProvider/pastRequests`,{serviceProviderId})
+        .then((res) => {
+          // Check res
+          console.log(res);
+          if (res.data.status === 200) {
+            dispatch({
+              type: actionTypes.CHANGE_SERVICE_DATA,
+              service_data: {
+                token,
+                serviceProviderId,
+                allCompletedRequests: res.data.data.allCompletedRequests,
+              },
+            });
+            setData(res.data.data.allCompletedRequests);
+          } else {
+            notification.error({
+              message: `Error`,
+              description: res.data.message,
+              placement: "bottomLeft",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     }
   };
-  const viewOnClick = () => {
+  const viewOnClick = (index) => {
+    setIndex(index);
     if (selectionKey === "requests") {
       setScreenView("detailedRequest");
     } else if (selectionKey === "past") {
@@ -58,7 +142,7 @@ const Service = () => {
     navigate("/");
   };
   useEffect(() => {
-    //API for getting data from redux
+    setData(service_data.pendingRequests);
   }, []);
 
   return (
@@ -82,7 +166,7 @@ const Service = () => {
           </span>
         </div>
       </ActionContainer>
-      <Heading>Yaha tag line aayega</Heading>
+      <Heading>Aaya</Heading>
       <CustomLayout>
         <Row>
           <Sider collapsible width={250} className="site-layout-background">
@@ -107,27 +191,44 @@ const Service = () => {
 
           {screenView === "requests" && (
             <Content className="search-content">
-              <AdminInfoCard rating width={350} viewOnClick={viewOnClick} />
+              {cardData.map((cardDetails, index) => (
+                <AdminInfoCard
+                  rating
+                  width={350}
+                  cardDetails={cardDetails}
+                  viewOnClick={() => viewOnClick(index)}
+                  selectionKey={selectionKey}
+                />
+              ))}
             </Content>
           )}
           {screenView === "detailedRequest" && (
             <Content className="search-content">
-              <CancelServiceContent showApprove setScreenView={setScreenView} />
+              <CancelServiceContent
+                card_details={cardData[index]}
+                showApprove
+                setScreenView={setScreenView}
+              />
             </Content>
           )}
-          {screenView === "current" && (
+          {(screenView === "current" && cardData.length>0) && (
             <Content className="search-content">
-              <CancelServiceContent setScreenView={setScreenView} />
+              <CancelServiceContent
+               card_details={cardData[0]} showCancel setScreenView={setScreenView} />
             </Content>
           )}
           {screenView === "past" && (
             <Content className="search-content">
-              <AdminInfoCard
-                rating
-                width={350}
-                feedback
-                viewOnClick={viewOnClick}
-              />
+              {cardData.map((cardDetails, index) => (
+                <AdminInfoCard
+                  rating
+                  width={350}
+                  feedback
+                  cardDetails={cardDetails}
+                  viewOnClick={() => viewOnClick(index)}
+                  selectionKey={selectionKey}
+                />
+              ))}
             </Content>
           )}
           {isModalVisible && (

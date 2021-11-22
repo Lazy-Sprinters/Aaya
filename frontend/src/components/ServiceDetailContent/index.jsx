@@ -4,29 +4,59 @@ import { CustomContent } from "./styles";
 import { LeftOutlined, UserOutlined } from "@ant-design/icons";
 import ReviewCard from "../Cards/ReviewCard";
 import TnC from "../Modals/TnC";
+import Axios from "axios";
+import { ROOT_URL } from "../../App";
+import * as actionTypes from "../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
 
-const ServiceDetailContent = ({ setScreenView }) => {
+const ServiceDetailContent = ({ timeSpecs, patientId,clientId,card_details,setScreenView,setData }) => {
   const plainOptions = ["Nanny", "Nurse"];
   const [foodProvision, setFoodProvision] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [serviceProviderId, setServiceProviderId] = useState("");
   const [RequestStatus, setRequestStatus] = useState(false);
+  const dispatch = useDispatch();
 
-  const onApprove = () => {
-    console.log("approved");
+  const onApprove = serviceProviderId => {
+    setServiceProviderId(serviceProviderId)
     setModalVisible(true);
   };
 
   const hideModal = () => {
     setModalVisible(false);
   };
-  const handleTnC = () => {
+  const handleTnC = async() => {
     setScreenView("cards");
-    notification.success({
-      message: `Success`,
-      description: "Approved successfully",
-      placement: "bottomLeft",
-    });
+    const values={timeSpecs,serviceProviderId,patientId,clientId,foodProvision};
+    await Axios.post(`${ROOT_URL}/client/notifyServiceProvider`,values)
+        .then((res) => {
+          // Check res
+          console.log(res);
+          if (res.data.status === 200) {
+            dispatch({
+              type: actionTypes.CHANGE_CLIENT_SERVICE_DATA,
+              client_service_data: res.data.data,
+            });
+            setData(res.data.data.filteredList);
+            notification.success({
+              message: `Success`,
+              description: "Approved successfully",
+              placement: "bottomLeft",
+            });
+          } else {
+            notification.error({
+              message: `Error`,
+              description: res.data.message,
+              placement: "bottomLeft",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    
   };
+  const {name,reviews,serviceType,_id} =card_details
   return (
     <CustomContent>
       <Button
@@ -45,8 +75,8 @@ const ServiceDetailContent = ({ setScreenView }) => {
               <Row>
                 <Avatar size={128} icon={<UserOutlined />} />
                 <div className="details">
-                  <div>Name: Name</div>
-                  <div>Phone: Phone Number</div>
+                  <div>Name: {name}</div>
+                  <div>Service Type : {serviceType[0]}</div>
                 </div>
               </Row>
             </div>
@@ -63,7 +93,7 @@ const ServiceDetailContent = ({ setScreenView }) => {
               <Button
                 className="approve-btn"
                 type="primary"
-                onClick={() => onApprove()}
+                onClick={() => onApprove(_id)}
                 style={{ backgroundColor: RequestStatus ? "yellow" : "green" }}
               >
                 {RequestStatus ? "Pending" : "Request"}
@@ -72,11 +102,9 @@ const ServiceDetailContent = ({ setScreenView }) => {
           </Col>
           <Col>
             <div className="reviews">
-              <ReviewCard />
-              <ReviewCard />
-              <ReviewCard />
-              <ReviewCard />
-              <ReviewCard />
+            {reviews.map((review) => (
+              <ReviewCard review={review} />
+            ))}
             </div>
           </Col>
         </Row>

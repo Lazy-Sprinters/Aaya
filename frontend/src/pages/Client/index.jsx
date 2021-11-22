@@ -46,9 +46,9 @@ const Client = () => {
             <Avatar className="avatar" size="small" icon={<UserOutlined />} />
             <span className="Name" onClick={() => openClient()}>Client</span>
           </span>
-          <span className="tab">
+          {/* <span className="tab">
             <span className="Name" onClick={() => openBooking()}>Your Bookings</span>
-          </span>
+          </span> */}
           <span className="tab">
             <span className="Name" onClick={() => logout()}>
               LogOut
@@ -56,7 +56,7 @@ const Client = () => {
           </span>
         </div>
       </ActionContainer>
-      <Heading>Yaha tag line aayega</Heading>
+      <Heading>Aaya</Heading>
       <BookButton type="primary" onClick={() => book()}>
         Book Now
       </BookButton>

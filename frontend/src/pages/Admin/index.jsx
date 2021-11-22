@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {} from "./styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { ROOT_URL } from "../../App";
 import * as actionTypes from "../../store/actions";
-import { Layout, Menu, Avatar, Badge } from "antd";
+import { Layout, Menu, Avatar, Badge, notification } from "antd";
 import {
   FormOutlined,
   BarsOutlined,
@@ -23,21 +23,88 @@ const Admin = () => {
   const [cardData, setData] = useState([]);
   const [selectionKey, setKey] = useState("client");
   const [screenView, setScreenView] = useState("cards");
+  const [index, setIndex] = useState(0);
+  const admin_data = useSelector((state) => state.admin_data);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const getData = (event) => {
+  const getData = async(event) => {
     setScreenView("cards");
     const key = event.key;
     setKey(key);
     console.log(key);
     if (key === "client") {
+      await Axios.post(`${ROOT_URL}/admin/listPendingApprovalClients`)
+      .then((res) => {
+        // Check res
+        console.log(res);
+        if (res.data.status === 200) {
+          dispatch({
+            type: actionTypes.CHANGE_ADMIN_DATA,
+            admin_data: res.data.data.pendingApprovalClients,
+          });
+          setData(res.data.data.pendingApprovalClients);
+        } else {
+          notification.error({
+            message: `Error`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
     } else if (key === "service") {
+      await Axios.post(`${ROOT_URL}/admin/listPendingApprovalServiceProviders`)
+      .then((res) => {
+        // Check res
+        console.log(res);
+        if (res.data.status === 200) {
+          dispatch({
+            type: actionTypes.CHANGE_ADMIN_DATA,
+            admin_data: res.data.data.pendingApprovalServiceProviders,
+          });
+          setData(res.data.data.pendingApprovalServiceProviders);
+          } else {
+          notification.error({
+            message: `Error`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
     } else {
+      await Axios.post(`${ROOT_URL}/admin/listCancellationRequests`)
+      .then((res) => {
+        // Check res
+        console.log(res);
+        if (res.data.status === 200) {
+          dispatch({
+            type: actionTypes.CHANGE_ADMIN_DATA,
+            admin_data: res.data.data.requests,
+          });
+          setData(res.data.data.requests);
+          } else {
+          notification.error({
+            message: `Error`,
+            description: res.data.message,
+            placement: "bottomLeft",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
     }
   };
 
-  const viewOnClick = () => {
+  const viewOnClick = (index) => {
     console.log(selectionKey);
+    setIndex(index)
     if (selectionKey === "client" || selectionKey === "service") {
       setScreenView("approveDetails");
       //Open modal with info on it and approval
@@ -48,9 +115,11 @@ const Admin = () => {
   };
   const logout = () => {
     //APi for logout admin
-    navigate('/');
+    navigate("/");
   };
-
+  useEffect(() => {
+    setData(admin_data);
+  }, []);
   return (
     <CustomLayout>
       <Header className="header">
@@ -83,7 +152,7 @@ const Admin = () => {
             defaultSelectedKeys={["client"]}
             defaultOpenKeys={["approve"]}
             style={{ height: "100%", borderRight: 0 }}
-            onSelect={getData}
+            onSelect={e => getData(e)}
           >
             <SubMenu
               key="approve"
@@ -111,27 +180,25 @@ const Admin = () => {
                 justifyContent: "space-around",
               }}
             >
-              {cardData.map((cardDetails) => (
-                <AdminInfoCard />
+              {cardData.map((cardDetails,index) => (
+                <AdminInfoCard
+                  cardDetails={cardDetails}
+                  viewOnClick={() => viewOnClick(index)}
+                  selectionKey={selectionKey}
+                />
               ))}
-              <AdminInfoCard
-                viewOnClick={viewOnClick}
-                selectionKey={selectionKey}
-              />
-              <AdminInfoCard />
-              <AdminInfoCard />
-              <AdminInfoCard />
-              <AdminInfoCard />
             </Content>
           )}
           {screenView === "approveDetails" && (
             <ApproveAdminContent
               selectionKey={selectionKey}
               setScreenView={setScreenView}
+              card_details={cardData[index]}
             />
           )}
           {screenView === "cancelDetails" && (
             <CancelAdminContent
+            cardDetails={cardData[index]}
               selectionKey={selectionKey}
               setScreenView={setScreenView}
             />

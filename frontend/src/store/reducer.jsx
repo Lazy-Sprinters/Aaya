@@ -6,6 +6,10 @@ const initialState = {
   phoneNumberVerified: null,
   phoneNumber: null,
   role:null,
+  admin_data:null,
+  client_data:null,
+  client_service_data:null,
+  service_data:null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,6 +41,34 @@ const reducer = (state = initialState, action) => {
         return {
           ...state,
           role: action.role,
+        };
+      }
+      case actionTypes.CHANGE_ADMIN_DATA: {
+        // console.log("token edited")
+        return {
+          ...state,
+          admin_data: action.admin_data,
+        };
+      }
+      case actionTypes.CHANGE_CLIENT_DATA: {
+        // console.log("token edited")
+        return {
+          ...state,
+          client_data: action.client_data,
+        };
+      }
+      case actionTypes.CHANGE_CLIENT_SERVICE_DATA: {
+        // console.log("token edited")
+        return {
+          ...state,
+          client_service_data: action.client_service_data,
+        };
+      }
+      case actionTypes.CHANGE_SERVICE_DATA: {
+        // console.log("token edited")
+        return {
+          ...state,
+          service_data: action.service_data,
         };
       }
     default:
