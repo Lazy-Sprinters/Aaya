@@ -4,6 +4,7 @@ const mailer = require('../lib/mailer');
 const Client = require('../models/client');
 const Admin = require('../models/admin');
 const ServiceProvider = require('../models/serviceProvider');
+const Request = require('../models/request');
 const helper = require('./helper');
 const mongoose = require('mongoose');
 
@@ -102,8 +103,57 @@ router.post('/rejectServiceProvider', async (req, res) =>{
   }
 })
 
-// router.post('/listCancellationRequests', async (req, res)=>{
+router.post('/listCancellationRequests', async (req, res)=>{
+  try{
+    const cancelledRequests = await Request.find({cancellationApproved: false, cancelled: true});
+    let response = [];
+    for(const request in cancelledRequests){
+      const serviceProvider = await ServiceProvider.findOne({"_id": request.serviceProviderId});
+      response.push({requestId: request._id, serviceProvider: serviceProvider});
+    }
+    res.send(utils.responseUtil(200, "Request Successful", {requests:response}));
+  }catch(err){
+    console.log(err);
+    res.send(utils.responseUtil(400, err.message, null));
+  }
+});
 
-// })
+router.post('/acceptCancellationRequest', async (req, res)=>{
+  try{
+    const request = await Request.findOne({'_id': req.body.requestId});
+    request.cancellationApproved = true;
+    await request.save();
+    const cancelledRequests = await Request.find({cancellationApproved: false, cancelled: true});
+    let response = [];
+    for(const request in cancelledRequests){
+      const serviceProvider = await ServiceProvider.findOne({"_id": request.serviceProviderId});
+      response.push({requestId: request._id, serviceProvider: serviceProvider});
+    }
+    res.send(utils.responseUtil(200, "Request Successful", {requests:response}));
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null));
+  }
+});
+
+router.post('/rejectCancellationRequest', async (req, res)=>{
+  try{
+    const request = await Request.findOne({'_id': req.body.requestId});
+    request.cancellationApproved = true;
+    await request.save();
+    const associatedServiceProvider = await ServiceProvider.findOne({"_id": request.serviceProviderId});
+    associatedServiceProvider.rating -= 0.2;
+    associatedServiceProvider.totalRating -= (0.2*associatedServiceProvider.reviews.length);
+    associatedServiceProvider.save();
+    const cancelledRequests = await Request.find({cancellationApproved: false, cancelled: true});
+    let response = [];
+    for(const request in cancelledRequests){
+      const serviceProvider = await ServiceProvider.findOne({"_id": request.serviceProviderId});
+      response.push({requestId: request._id, serviceProvider: serviceProvider});
+    }
+    res.send(utils.responseUtil(200, "Request Successful", {requests:response}));
+  }catch(err){
+    res.send(utils.responseUtil(400, err.message, null));
+  }
+})
 
 module.exports = router
