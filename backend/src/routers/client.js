@@ -7,6 +7,8 @@ const Request = require('../models/request');
 const mongoose = require('mongoose');
 const ServiceProvider = require('../models/serviceProvider');
 const mailer = require('../lib/mailer');
+const reviewUtil = require('../lib/review');
+
 
 const router = new express.Router();
 
@@ -71,6 +73,7 @@ router.post('/registerPatient', async(req, res)=>{
 
 router.post('/notifyServiceProvider', async(req, res)=>{
   try{
+    console.log(req.body);
     const timeSpecs = req.body.timeSpecs; //TODO: Hotfix
     const daysWorked = (parseDate(timeSpecs[1]) - parseDate(timeSpecs[0]))/(1000 * 60 * 60 * 24);
     const associatedServiceProvider = await ServiceProvider.findOne({"_id":mongoose.Types.ObjectId(req.body.serviceProviderId)})
@@ -109,6 +112,7 @@ router.post('/notifyServiceProvider', async(req, res)=>{
     
     res.send(utils.responseUtil(200, "Data Found", {filteredList: filteredList, timeSpecs: timeSpecs}));
   }catch(err){
+    console.log(err);
     res.send(utils.responseUtil(400, err.message, null));
   }
 })
@@ -161,7 +165,7 @@ router.post('/rateServiceProvider', async (req, res) => {
     else{
       serviceProvider.rating = (serviceProvider.totalRating + req.body.rating)/(serviceProvider.reviews.length + 1);
       serviceProvider.totalRating += req.body.rating;
-      const reviewScore = 4 //TODO @samarthya jha add your handler, it is imported
+      const reviewScore = await reviewUtil.getReviewScore({review: req.body.review}); //TODO @samarthya jha add your handler, it is imported
       serviceProvider.reviews.push({
         text: req.body.review,
         reviewRating: reviewScore
@@ -171,6 +175,7 @@ router.post('/rateServiceProvider', async (req, res) => {
     const requests = await Request.find({status: "Confirmed", clientId: request.clientId});
     res.send(utils.responseUtil(200, "Request success", {allCurrentRequests: requests}))
   }catch(err){
+    console.log(err);
     res.send(utils.responseUtil(400, err.message, null))
   }
 });
