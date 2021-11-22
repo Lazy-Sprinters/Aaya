@@ -38,4 +38,4 @@ HTML/CSS/JS, React with Redux State Management
 
 Flask, Spacy
 
-
+https://drive.google.com/drive/folders/1qNWx2GyEInerW-JGdZhyTF_Qh-8SwsBz?usp=sharing
