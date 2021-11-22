@@ -5,6 +5,7 @@ const ServiceProvider = require('../models/serviceProvider');
 const Request = require('../models/request')
 const mongoose = require('mongoose');
 const mailer = require('../lib/mailer');
+const messageUtil = require('../lib/otp');
 const reviewUtil = require('../lib/review');
 
 const router = new express.Router();
@@ -150,6 +151,15 @@ router.post('/rateClient', async (req, res) => {
     res.send(utils.responseUtil(400, err.message, null))
   }
 });
+
+// router.post('/sos', async (req, res)=>{
+//   try{
+//     const serviceProviderId = req.body.serviceProviderId;
+//     messageUtil.sendOtp
+//   }catch(err){
+//     res.send(utils.responseUtil(400, err.message, null))
+//   }
+// })
 
 
 

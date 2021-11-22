@@ -62,7 +62,7 @@ router.post('/registerPatient', async(req, res)=>{
       throw new Error("No Service Providers Found");
     }
     
-    res.send(utils.responseUtil(200, "Data Found", {filteredList: filteredList, timeSpecs: [startDate, endDate, startTimeDay, endTimeDay]}));
+    res.send(utils.responseUtil(200, "Data Found", {filteredList: filteredList, timeSpecs: [startDate, endDate, startTimeDay, endTimeDay], patientId: patient._id}));
   }catch(err){
     console.log(err);
     res.send(utils.responseUtil(400, err.message, null));
