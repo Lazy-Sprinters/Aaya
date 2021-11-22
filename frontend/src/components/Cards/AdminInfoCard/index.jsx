@@ -18,7 +18,7 @@ const AdminInfoCard = ({
   feedback,
   cardDetails,
 }) => {
-  const {name,phoneNumber,displayPictureURL,rating:rating1,calculatedCost} =cardDetails;
+  const {name,phoneNumber,displayPictureURL,rating:rating1,calculatedCost,dailyFees} =cardDetails;
   return (
     <CustomCard
       style={{
@@ -47,7 +47,7 @@ const AdminInfoCard = ({
                 <span>
                   Rating: <Rate disabled defaultValue={rating1} />
                 </span>
-                {rating && <span className="price">₹ {calculatedCost}</span>}
+                {rating && <span className="price">₹ {calculatedCost || dailyFees}</span>}
               </p>
             )}
           </div>,

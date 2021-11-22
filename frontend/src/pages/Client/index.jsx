@@ -62,7 +62,7 @@ const Client = () => {
       </BookButton>
       <DetailsSection>
         <ImgWrapper>
-          <img src="https://picsum.photos/800" alt="details" />
+          <img src="/images/2.jpg" alt="details" />
         </ImgWrapper>
         <div class="description">
           <div class="title">Nurse</div>
@@ -85,7 +85,7 @@ const Client = () => {
           <div className="price">₹ 600-1600</div>
         </div>
         <ImgWrapper>
-          <img src="https://picsum.photos/800" alt="details" />
+          <img src="/images/1.jpg" alt="details" />
         </ImgWrapper>
       </DetailsSection>
     </ClientBody>

@@ -222,7 +222,7 @@ const Home = () => {
 
       <AboutContainer>
         <div className="about-wrapper">
-          <img src="https://picsum.photos/800" className="about" alt="about" />
+          <img src="/images/1.jpg" className="about" alt="about" />
         </div>
         <div className="about-us">
           <div className="title">About Us</div>
