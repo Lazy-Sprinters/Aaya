@@ -1,5 +1,7 @@
 # Aaya
 
+![alt text](http://public/1.png)
+
 Official git repository of Team Lazy Sprinters for DevJams 21
 
 # Problem Statement
