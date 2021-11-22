@@ -1,6 +1,6 @@
 # Aaya
 
-<img src="https://raw.githubusercontent.com/Lazy-Sprinters/Aaya/public/1.png">
+<img src="https://raw.githubusercontent.com/Lazy-Sprinters/Aaya/main/public/1.png">
 
 Official git repository of Team Lazy Sprinters for DevJams 21
 
