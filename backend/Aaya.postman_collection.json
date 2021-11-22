@@ -1,0 +1,646 @@
+{
+	"info": {
+		"_postman_id": "c30c7303-ebd6-4ccf-bb45-16277d5ffd3f",
+		"name": "Aaya",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phoneNumber\": \"7599118499\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Pending Service Providers",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/admin/listPendingApprovalServiceProviders",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"listPendingApprovalServiceProviders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Client Verification Requests",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/listPendingApprovalClients",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"listPendingApprovalClients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": \"619a946486cf7b0bf1141ee1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/approveClient",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"approveClient"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Service Provider",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"serviceProviderId\": \"619a97ee227b7411ec1607a7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/approveServiceProvider",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"approveServiceProvider"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": \"619a946a86cf7b0bf1141ee3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/rejectClient",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"rejectClient"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Service Provider",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"serviceProviderId\": \"619a97f9227b7411ec1607ab\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/admin/rejectServiceProvider",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"rejectServiceProvider"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Pavitra\",\n    \"dob\": \"01/01/2001\",\n    \"email\": \"samarthy150112@gmail.com\",\n    \"emailVerified\": true,\n    \"password\": \"12345678\",\n    \"phoneNumber\": \"7899112412\",\n    \"phoneNumberVerified\": true,\n    \"policePhone\": \"7789771097\",\n    \"emergencyPhone\": \"8789771097\",\n    \"address\": \"Bhikhanpur\",\n    \"pinCode\": \"812001\",\n    \"aadhaarURL\": \"https://storage.googleapis.com/aaya-c5378.appspot.com/UserFiles/d0314ec9-11a1-447f-8143-8baff563f19f.PDF?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-smep7%40aaya-c5378.iam.gserviceaccount.com%2F20211122%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20211122T060634Z&X-Goog-Expires=600299&X-Goog-SignedHeaders=host&X-Goog-Signature=2ca17f6aec2b738f0cc56a0f8d43e5e5d3b9aee9307e81ce89ec664af19da2c335f9bd3db3e6e903dae22df3151689c495d90904a0fd7eb40c931aa0d2128a9ca636fc8898f9a20c08001d58cbaf7be5afff743964da4aa5b542cafa5e54259358385eefb5416911d3199a1650b4e2dd00170febd9d5ab5aca28a8254d07975398429d1ac2cca1f4a9010ac740611f65c6bbc84792d1863b91014768bd356d98754b65cafbe0b861ea3ac8d7fcc7590d1179893f3f5a9d40747866a0b1551e81daa86aa30ecb8d651440763ab19c46df516fd0627b38928fe8589ba78a7970cefe06ef388366cfd6b7874b580a53f2356c4e63bcb096297da44d9f1107766aef\",\n    \"displayPictureURL\": \"https://storage.googleapis.com/aaya-c5378.appspot.com/UserFiles/5a9126d3-5349-45a2-a990-727c21c173ed.jpeg?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-smep7%40aaya-c5378.iam.gserviceaccount.com%2F20211122%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20211122T060751Z&X-Goog-Expires=600300&X-Goog-SignedHeaders=host&X-Goog-Signature=a8f98812a5b2eadf8654eb10fbd358550352f8585ac5324fd07478a19f0c16e3d16d5153111c0c681e027895dfd68337e610cfd11c5a80e8b1fecda0865b13e01230ea3627766a507393ff6d21d3ceebe1cf6f3e70c8c077cecf1c281719356950c0251eeed01d11cde746d3918633e3892eb734d8ac81395c31dc05c65f3ee922552c96ff320faffe9b5eed115df05d1fa8472d9f333e2def8ea2f8a308a7eccfefc3f38d8d965aedd0d84dc06bf810b21cab664ef816170d1eec1864544e7a0d2c856d885738da4416ba5ea6cf449f0b69f252a1711d0360271109ea97286afb4060f9c56c042863df1bb4019f6c13dbf44fe20f627bae66d8d7258d3f16e3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/client/signup",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"client",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Patient",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Anuraj\",\n    \"dob\": \"01/01/2001\",\n    \"phoneNumber\": \"7599118499\",\n    \"phoneNumberVerified\": true,\n    \"policePhone\": \"7599118499\",\n    \"emergencyPhone\": \"7599118499\",\n    \"address\": \"Bhikhanpur\",\n    \"pinCode\": \"812001\",\n    \"startDate\": \"21/11/2021\",\n    \"endDate\": \"22/11/2021\",\n    \"startTimeDay\": \"12:00\",\n    \"endTimeDay\": \"18:00\",\n    \"aadhaarURL\": \"https://storage.googleapis.com/aaya-c5378.appspot.com/UserFiles/097e4bb5-aa2c-4fe2-b40a-2fae221a02de.pdf?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-smep7%40aaya-c5378.iam.gserviceaccount.com%2F20211121%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20211121T180956Z&X-Goog-Expires=600299&X-Goog-SignedHeaders=host&X-Goog-Signature=38ba2f8690a5ba3fa270b93524fbb62f8532959394fc3f1776252794f7fc81f8331ccece04ae97ada3e68d114a29a5e3847abb8f7329d1645685238755d3bafd81a7a00017ba58e13aaf2c3c426e0c68a018db08c2d675cbd010d6ed12f93f54af99cbc3227ed11a0869bbdb5031e9225fdbe64d497973a27e84c5e33fb02dc390af32e814e302e1d7ca49a93345e6d014bd434d4bddde5d207f14783dd08bf86e9d40224960e31ff3bb03918a88ba4382d90c06dd74159115b4fb43bc11b908a153082c177f0adc8f7b66dca5ca6c5ec5b53726eb167be1866af4977d5a4a10d788b30f67bbd7292595d645682b072e78e99ce547380edb4cb756acf5c40562\",\n    \"displayPictureURL\": \"https://storage.googleapis.com/aaya-c5378.appspot.com/UserFiles/26332b91-3f72-4da4-b942-3dca20513f3c.jpeg?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-smep7%40aaya-c5378.iam.gserviceaccount.com%2F20211121%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20211121T181111Z&X-Goog-Expires=600300&X-Goog-SignedHeaders=host&X-Goog-Signature=93bf4c307dc6b4e45f9e23a402f45e52c5b912baf4543f51f1bf4b35b97282c4c103595826c06e3dd599eaa6e4362c19b26452ff27dec2d29e53d56a70f9058092b862e6ed3c353e96a4482fd30379bcaf4ac33c9edbd244ea6cc0a0df0135227fd68f254ed50b109ee778bbc06176545966ae583168cba934c5cc844167b2fd8f3d77919573beb98ebe2462eb55c4102ff20c371374fa618e23fb38dbf34ee8c0be09f5f2dae32f9ec8fd74fee088d2db9669d4640ef86c68b896851d94b00091405be7d7776c0a6dbc2af72bc9225160b17f2a2c8cdcf80f2ddec22c1ed0c489038b71341a1de7726f093aeaab02e81117d55bc3265733a9e50ab12c5e1932\",\n    \"patientDescription\": \"description\",\n    \"patientNotes\": \"notes\",\n    \"requirement\": \"Nanny\",\n    \"clientId\": \"619a8e869bf5280255e1c763\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/client/registerPatient",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"client",
+								"registerPatient"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notify service provider",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"timeSpecs\": [\n        \"21/11/2021\",\n        \"22/11/2021\",\n        \"12:00\",\n        \"18:00\"\n    ],\n    \"foodProvision\":true,\n    \"clientId\":\"619a8e869bf5280255e1c763\",\n    \"patientId\":\"619ab238a0024f3500cc7e72\",\n    \"serviceProviderId\": \"619a97f3227b7411ec1607a9\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/client/notifyServiceProvider",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"client",
+								"notifyServiceProvider"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rate service provider",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requestId\": \"619b37b73f767adab1c2770f\",\n    \"rating\": 5,\n    \"review\": \"Bad Service\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/client/rateServiceProvider",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"client",
+								"rateServiceProvider"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Service Provider",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Pavitra\",\n    \"dob\": \"01/01/2001\",\n    \"email\": \"demo3@gmail.com\",\n    \"emailVerified\": true,\n    \"password\": \"12345678\",\n    \"phoneNumber\": \"1211111112\",\n    \"phoneNumberVerified\": true,\n    \"policePhone\": \"7599118499\",\n    \"emergencyPhone\": \"7599118499\",\n    \"address\": \"Bhikhanpur\",\n    \"pinCode\": \"812001\",\n    \"serviceType\": [\n        \"Nurse\",\n        \"Nanny\"\n    ],\n    \"aadhaarURL\": \"https://storage.googleapis.com/aaya-c5378.appspot.com/UserFiles/d0314ec9-11a1-447f-8143-8baff563f19f.PDF?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-smep7%40aaya-c5378.iam.gserviceaccount.com%2F20211122%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20211122T060634Z&X-Goog-Expires=600299&X-Goog-SignedHeaders=host&X-Goog-Signature=2ca17f6aec2b738f0cc56a0f8d43e5e5d3b9aee9307e81ce89ec664af19da2c335f9bd3db3e6e903dae22df3151689c495d90904a0fd7eb40c931aa0d2128a9ca636fc8898f9a20c08001d58cbaf7be5afff743964da4aa5b542cafa5e54259358385eefb5416911d3199a1650b4e2dd00170febd9d5ab5aca28a8254d07975398429d1ac2cca1f4a9010ac740611f65c6bbc84792d1863b91014768bd356d98754b65cafbe0b861ea3ac8d7fcc7590d1179893f3f5a9d40747866a0b1551e81daa86aa30ecb8d651440763ab19c46df516fd0627b38928fe8589ba78a7970cefe06ef388366cfd6b7874b580a53f2356c4e63bcb096297da44d9f1107766aef\",\n    \"displayPictureURL\": \"https://storage.googleapis.com/aaya-c5378.appspot.com/UserFiles/5a9126d3-5349-45a2-a990-727c21c173ed.jpeg?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-smep7%40aaya-c5378.iam.gserviceaccount.com%2F20211122%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20211122T060751Z&X-Goog-Expires=600300&X-Goog-SignedHeaders=host&X-Goog-Signature=a8f98812a5b2eadf8654eb10fbd358550352f8585ac5324fd07478a19f0c16e3d16d5153111c0c681e027895dfd68337e610cfd11c5a80e8b1fecda0865b13e01230ea3627766a507393ff6d21d3ceebe1cf6f3e70c8c077cecf1c281719356950c0251eeed01d11cde746d3918633e3892eb734d8ac81395c31dc05c65f3ee922552c96ff320faffe9b5eed115df05d1fa8472d9f333e2def8ea2f8a308a7eccfefc3f38d8d965aedd0d84dc06bf810b21cab664ef816170d1eec1864544e7a0d2c856d885738da4416ba5ea6cf449f0b69f252a1711d0360271109ea97286afb4060f9c56c042863df1bb4019f6c13dbf44fe20f627bae66d8d7258d3f16e3\",\n    \"certificateURL\": \"https://storage.googleapis.com/aaya-c5378.appspot.com/UserFiles/d0314ec9-11a1-447f-8143-8baff563f19f.PDF?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-smep7%40aaya-c5378.iam.gserviceaccount.com%2F20211122%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20211122T060634Z&X-Goog-Expires=600299&X-Goog-SignedHeaders=host&X-Goog-Signature=2ca17f6aec2b738f0cc56a0f8d43e5e5d3b9aee9307e81ce89ec664af19da2c335f9bd3db3e6e903dae22df3151689c495d90904a0fd7eb40c931aa0d2128a9ca636fc8898f9a20c08001d58cbaf7be5afff743964da4aa5b542cafa5e54259358385eefb5416911d3199a1650b4e2dd00170febd9d5ab5aca28a8254d07975398429d1ac2cca1f4a9010ac740611f65c6bbc84792d1863b91014768bd356d98754b65cafbe0b861ea3ac8d7fcc7590d1179893f3f5a9d40747866a0b1551e81daa86aa30ecb8d651440763ab19c46df516fd0627b38928fe8589ba78a7970cefe06ef388366cfd6b7874b580a53f2356c4e63bcb096297da44d9f1107766aef\",\n    \"dailyFees\": 500\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/serviceProvider/signup",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"serviceProvider",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm a request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requestId\": \"619aa1929386f221429bfbab\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/serviceProvider/confirmRequest",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"serviceProvider",
+								"confirmRequest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all pending requests",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"serviceProviderId\": \"619a97f3227b7411ec1607a9\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/serviceProvider/getAllRequests",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"serviceProvider",
+								"getAllRequests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject booking",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requestId\":\"619ab279a0024f3500cc7e77\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/serviceProvider/rejectRequest",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"serviceProvider",
+								"rejectRequest"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Library",
+			"item": [
+				{
+					"name": "Upload File Pdf",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/pavitra/Downloads/CIELDELFA0003297859.PDF"
+								},
+								{
+									"key": "message",
+									"value": "upload_file",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/library/upload/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"library",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload File Image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/pavitra/Desktop/Imp Docs/Personal Documents/Signature.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/library/upload/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"library",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Otp",
+			"item": [
+				{
+					"name": "New Otp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"phoneNumber\",\n    \"entity\": \"7599118499\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/otp/new",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"otp",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Otp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"entity\": \"7599118499\",\n    \"otp\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/otp/verify",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"otp",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Admin Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phoneNumber\": \"7599118499\",\n    \"password\": \"12345678\",\n    \"role\":\"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/log/in",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"log",
+								"in"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Client Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phoneNumber\": \"7599118499\",\n    \"password\": \"12345678\",\n    \"role\":\"client\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Service Provider Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phoneNumber\": \"7599118499\",\n    \"password\": \"12345678\",\n    \"role\":\"serviceProvider\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Base Route",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}",
+					"host": [
+						"{{url}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
